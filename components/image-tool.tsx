@@ -45,7 +45,7 @@ export function ImageTool({ config }: { config: ToolConfig }) {
   async function chooseFile(nextFile: File, pendingAction?: PendingImageAction) {
     setBusy(true); setError("");
     setRemoveWhite(pendingAction === "remove-background"); setTolerance(20);
-    const alternatePngInput = pendingAction === "webp-png" || pendingAction === "remove-background";
+    const alternatePngInput = pendingAction === "remove-background";
     if (config.kind === "jpg-png" && nextFile.type !== "image/jpeg" && !alternatePngInput) {
       setError("JPG to PNG accepts JPG or JPEG files. Choose a JPG image to continue."); setBusy(false); return;
     }

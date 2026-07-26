@@ -1,7 +1,6 @@
 export type PendingImageAction =
   | "jpg-png"
   | "png-jpg"
-  | "webp-png"
   | "remove-background"
   | "grayscale"
   | "invert";

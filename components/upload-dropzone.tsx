@@ -54,7 +54,7 @@ export function UploadDropzone({
             <img src={preview.url} alt={`Selected image: ${preview.name}`} />
             <div className="selected-image-meta">
               <span><strong>{preview.name}</strong><small>Drop another image here to replace it</small></span>
-              <button className="upload-button" type="button" onClick={(event) => { event.stopPropagation(); inputRef.current?.click(); }}>Replace image</button>
+              <button className="replace-image-button" type="button" onClick={(event) => { event.stopPropagation(); inputRef.current?.click(); }}>Replace image</button>
             </div>
           </div>
         ) : (

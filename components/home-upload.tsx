@@ -1,12 +1,14 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { setPendingImage, type PendingImageAction } from "@/lib/pending-image";
+import { AdPlaceholder } from "./ad-placeholder";
 import { UploadDropzone } from "./upload-dropzone";
 
 export function HomeUpload() {
   const router = useRouter();
+  const uploadRef = useRef<HTMLDivElement>(null);
   const [file, setFile] = useState<File | null>(null);
   const previewUrl = useMemo(() => file ? URL.createObjectURL(file) : "", [file]);
 
@@ -14,11 +16,36 @@ export function HomeUpload() {
     if (previewUrl) URL.revokeObjectURL(previewUrl);
   }, [previewUrl]);
 
+  useEffect(() => {
+    if (!file) return;
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const timer = window.setTimeout(() => {
+      const top = uploadRef.current?.getBoundingClientRect().top ?? 0;
+      if (top < 68 || top > 108) {
+        uploadRef.current?.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
+      }
+    }, reduceMotion ? 0 : 330);
+    return () => window.clearTimeout(timer);
+  }, [file]);
+
   const conversion = file?.type === "image/jpeg"
     ? { label: "JPG → PNG", action: "jpg-png" as const, href: "/jpg-to-png" }
     : file?.type === "image/png"
       ? { label: "PNG → JPG", action: "png-jpg" as const, href: "/png-to-jpg" }
-      : { label: "WebP → PNG", action: "webp-png" as const, href: "/jpg-to-png" };
+      : null;
+
+  const actions: { label: string; description?: string; icon: string; action: PendingImageAction; href: string }[] = [
+    ...(conversion ? [{ ...conversion, description: "Change the file format", icon: "↗" }] : []),
+    ...(file?.type === "image/jpeg" ? [{
+      label: "Remove Background",
+      description: "Create a transparent PNG",
+      icon: "◫",
+      action: "remove-background" as const,
+      href: "/jpg-to-png",
+    }] : []),
+    { label: "Grayscale", icon: "◐", action: "grayscale", href: "/grayscale-image" },
+    { label: "Invert Colors", icon: "◑", action: "invert", href: "/invert-image" },
+  ];
 
   function openTool(action: PendingImageAction, href: string) {
     if (!file) return;
@@ -27,41 +54,29 @@ export function HomeUpload() {
   }
 
   return (
-    <div className={`home-upload ${file ? "has-image" : ""}`}>
+    <div ref={uploadRef} className={`home-upload ${file ? "has-image" : ""}`}>
       <UploadDropzone
         onFile={setFile}
         preview={file ? { url: previewUrl, name: file.name } : undefined}
       />
       {file && (
-        <section className="quick-actions" aria-labelledby="quick-actions-title">
-          <div className="quick-actions-heading">
-            <div><p className="eyebrow">Image ready</p><h2 id="quick-actions-title">What would you like to do?</h2></div>
-            <p>Choose an action to continue with this image.</p>
-          </div>
-          <div className="action-groups">
-            <div className="action-group">
-              <h3>Convert</h3>
-              <button type="button" onClick={() => openTool(conversion.action, conversion.href)}>
-                <span aria-hidden="true">↗</span><strong>{conversion.label}</strong><small>Change the file format</small>
-              </button>
+        <>
+          <section className="quick-actions" aria-labelledby="quick-actions-title">
+            <div className="quick-actions-heading">
+              <h2 id="quick-actions-title">Choose an action</h2>
+              <p>What would you like to do with this image?</p>
             </div>
-            <div className="action-group">
-              <h3>Edit</h3>
-              <div className="edit-actions">
-                <button type="button" onClick={() => openTool("remove-background", "/jpg-to-png")}>
-                  <span aria-hidden="true">◫</span><strong>Remove Background</strong>
+            <div className="action-grid">
+              {actions.map((item) => (
+                <button type="button" key={item.action} onClick={() => openTool(item.action, item.href)}>
+                  <span aria-hidden="true">{item.icon}</span>
+                  <span><strong>{item.label}</strong>{item.description && <small>{item.description}</small>}</span>
                 </button>
-                <button type="button" onClick={() => openTool("grayscale", "/grayscale-image")}>
-                  <span aria-hidden="true">◐</span><strong>Grayscale</strong>
-                </button>
-                <button type="button" onClick={() => openTool("invert", "/invert-image")}>
-                  <span aria-hidden="true">◑</span><strong>Invert Colors</strong>
-                </button>
-              </div>
+              ))}
             </div>
-          </div>
-          <p className="status" role="status">Selected: {file.name}</p>
-        </section>
+          </section>
+          <AdPlaceholder />
+        </>
       )}
     </div>
   );
