@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { UploadDropzone } from "./upload-dropzone";
 import { ImagePreview } from "./image-preview";
-import { ToolInfoCard, type ToolInfo } from "./tool-info-card";
+import type { ToolInfo } from "./tool-info-card";
 import { formatBytes, loadImage, renderImage, type LoadedImage } from "@/lib/image-processing";
 import type { PixelMode } from "@/lib/pixels";
 import { takePendingImage, type PendingImageAction } from "@/lib/pending-image";
@@ -117,11 +117,30 @@ export function ImageTool({ config }: { config: ToolConfig }) {
     if (!resultBlob || !file) return;
     const link = document.createElement("a");
     link.href = resultUrl;
-    link.download = `${file.name.replace(/\.[^.]+$/, "")}-${config.kind}.${format === "png" ? "png" : "jpg"}`;
+    const outputName = config.kind === "invert" || config.kind === "grayscale" ? mode : config.kind;
+    link.download = `${file.name.replace(/\.[^.]+$/, "")}-${outputName}.${format === "png" ? "png" : "jpg"}`;
     link.click();
   }
 
   const transparentResult = format === "png" && ((config.kind === "jpg-png" && removeWhite) || file?.type === "image/png");
+  const isColorTool = config.kind === "invert" || config.kind === "grayscale";
+  const displayTitle = isColorTool
+    ? mode === "original" ? "Original Image" : mode === "invert" ? "Invert Image" : "Grayscale Image"
+    : config.title;
+  const displayDescription = isColorTool
+    ? mode === "original"
+      ? "Keep the image unchanged while choosing an output format."
+      : mode === "invert"
+        ? "Reverse every color for a clean photographic negative effect."
+        : "Create a balanced black-and-white image using weighted luminance."
+    : config.description;
+  const displayExplanation = isColorTool
+    ? mode === "original"
+      ? ["The original color values are preserved without applying an effect.", "Choose PNG to preserve transparency or JPG for a smaller photographic file."]
+      : mode === "invert"
+        ? ["Inverting replaces each RGB value with its opposite while preserving transparency.", "The preview updates instantly so you can compare the result before saving."]
+        : ["This tool uses the weighted formula 0.299R + 0.587G + 0.114B to match human brightness perception.", "PNG output preserves transparency; JPG output is ideal for smaller photographic files."]
+    : config.explanation;
   return (
     <>
       {!loaded ? <UploadDropzone onFile={chooseFile} compact /> : (
@@ -190,12 +209,11 @@ export function ImageTool({ config }: { config: ToolConfig }) {
       {error && <p className="error" role="alert">{error}</p>}
       <header className="tool-intro tool-intro-after-workspace">
         <p className="eyebrow">Free online image tool</p>
-        <h1>{config.title}</h1>
-        <p>{config.description}</p>
+        <h1>{displayTitle}</h1>
+        <p>{displayDescription}</p>
       </header>
-      <div className="explanation">{config.explanation.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}</div>
+      <div className="explanation">{displayExplanation.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}</div>
       <div className="info-section">
-        <ToolInfoCard info={config.info} />
         <section className="info-card"><h2>Related tools</h2><div className="related-links">
           <Link href="/invert-image">Invert image</Link><Link href="/grayscale-image">Grayscale image</Link><Link href="/jpg-to-png">JPG to PNG</Link><Link href="/png-to-jpg">PNG to JPG</Link><Link href="/resize-image">Resize image</Link>
         </div></section>
