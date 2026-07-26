@@ -3,7 +3,7 @@
   "short_name": "PixEasy",
   "description": "Fast, free online image tools processed locally in your browser.",
   "start_url": "/",
-  "display": "standalone",
+  "display": "browser",
   "background_color": "#ffffff",
   "theme_color": "#ff862c",
   "lang": "en",
