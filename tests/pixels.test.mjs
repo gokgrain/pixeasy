@@ -12,7 +12,19 @@ test("uses weighted grayscale luminance", () => {
 });
 
 test("white removal clears white and feathers near-threshold pixels", () => {
-  const result = removeWhitePixels(new Uint8ClampedArray([255, 255, 255, 255, 195, 195, 195, 255]), 20);
+  const result = removeWhitePixels(new Uint8ClampedArray([255, 255, 255, 255, 222, 222, 222, 255]), 20);
   assert.equal(result[3], 0);
   assert.ok(result[7] > 0 && result[7] < 255);
+});
+
+test("standard conversion preserves white and off-white pixels exactly", () => {
+  const source = new Uint8ClampedArray([255, 255, 255, 255, 248, 246, 240, 255, 255, 255, 255, 90]);
+  assert.deepEqual([...transformPixels(source, "original")], [...source]);
+});
+
+test("transparent conversion removes off-white backgrounds only when requested", () => {
+  const offWhite = new Uint8ClampedArray([248, 246, 240, 255, 70, 80, 90, 255]);
+  const transparent = removeWhitePixels(offWhite, 20);
+  assert.equal(transparent[3], 0);
+  assert.equal(transparent[7], 255);
 });

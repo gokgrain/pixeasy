@@ -32,7 +32,7 @@ export function ImageTool({ config }: { config: ToolConfig }) {
   const renderId = useRef(0);
 
   const reset = useCallback(() => {
-    setFile(null); setLoaded(null); setOriginalUrl(""); setResultUrl(""); setResultBlob(null); setError("");
+    setFile(null); setLoaded(null); setOriginalUrl(""); setResultUrl(""); setResultBlob(null); setError(""); setRemoveWhite(false); setTolerance(20);
   }, []);
 
   useEffect(() => () => loaded?.dispose(), [loaded]);
@@ -41,6 +41,7 @@ export function ImageTool({ config }: { config: ToolConfig }) {
 
   async function chooseFile(nextFile: File) {
     setBusy(true); setError("");
+    setRemoveWhite(false); setTolerance(20);
     if (config.kind === "jpg-png" && nextFile.type !== "image/jpeg") {
       setError("JPG to PNG accepts JPG or JPEG files. Choose a JPG image to continue."); setBusy(false); return;
     }
@@ -107,7 +108,7 @@ export function ImageTool({ config }: { config: ToolConfig }) {
     link.click();
   }
 
-  const transparentResult = format === "png" && (config.kind === "jpg-png" || file?.type === "image/png");
+  const transparentResult = format === "png" && ((config.kind === "jpg-png" && removeWhite) || file?.type === "image/png");
   return (
     <>
       {!loaded ? <UploadDropzone onFile={chooseFile} compact /> : (
@@ -133,7 +134,17 @@ export function ImageTool({ config }: { config: ToolConfig }) {
                 </div></div>
               )}
               {config.kind === "jpg-png" && <>
-                <label className="switch-row"><span>Remove white background</span><input type="checkbox" checked={removeWhite} onChange={(event) => setRemoveWhite(event.target.checked)} /></label>
+                <fieldset className="conversion-mode">
+                  <legend>Conversion mode</legend>
+                  <label className={removeWhite ? "mode-option" : "mode-option selected"}>
+                    <input type="radio" name="conversion-mode" checked={!removeWhite} onChange={() => setRemoveWhite(false)} />
+                    <span><strong>Standard PNG</strong><small>Keep the original image exactly as it is.</small></span>
+                  </label>
+                  <label className={removeWhite ? "mode-option selected" : "mode-option"}>
+                    <input type="radio" name="conversion-mode" checked={removeWhite} onChange={() => setRemoveWhite(true)} />
+                    <span><strong>Transparent PNG</strong><small>Remove white and near-white background.</small></span>
+                  </label>
+                </fieldset>
                 {removeWhite && <label className="field"><span>White tolerance: {tolerance}</span><input type="range" min="0" max="100" value={tolerance} onChange={(event) => setTolerance(Number(event.target.value))} /></label>}
               </>}
               {config.kind === "png-jpg" && <>
