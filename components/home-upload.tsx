@@ -35,7 +35,7 @@ export function HomeUpload() {
       : null;
 
   const actions: { label: string; description?: string; icon: string; action: PendingImageAction; href: string }[] = [
-    ...(conversion ? [{ ...conversion, description: "Change the file format", icon: "↗" }] : []),
+    ...(conversion ? [{ ...conversion, icon: "↗" }] : []),
     ...(file?.type === "image/jpeg" ? [{
       label: "Remove Background",
       description: "Create a transparent PNG",
@@ -64,7 +64,6 @@ export function HomeUpload() {
           <section className="quick-actions" aria-labelledby="quick-actions-title">
             <div className="quick-actions-heading">
               <h2 id="quick-actions-title">Choose an action</h2>
-              <p>What would you like to do with this image?</p>
             </div>
             <div className="action-grid">
               {actions.map((item) => (
