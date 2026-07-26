@@ -44,7 +44,12 @@ export function UploadDropzone({ onFile, compact = false }: { onFile: (file: Fil
         <strong>Drop your image here</strong>
         <small>or choose a file from your device</small>
         <button className="upload-button" type="button" onClick={(event) => { event.stopPropagation(); inputRef.current?.click(); }}>Choose image</button>
-        <span className="upload-note">JPG, PNG or WebP · up to 50 MB</span>
+        <span className="format-list" aria-label="Supported formats">
+          <span><b aria-hidden="true">✓</b> JPG</span>
+          <span><b aria-hidden="true">✓</b> PNG</span>
+          <span><b aria-hidden="true">✓</b> WebP</span>
+          <span className="size-limit">Maximum 50 MB</span>
+        </span>
       </div>
       {error && <p className="error" role="alert">{error}</p>}
     </>

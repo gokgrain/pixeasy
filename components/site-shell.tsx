@@ -20,7 +20,7 @@ export function Footer() {
       <div className="wrap footer-inner">
         <span>© {new Date().getFullYear()} PixEasy. Images stay on your device.</span>
         <nav className="footer-links" aria-label="Footer navigation">
-          <Link href="/about">About</Link><Link href="/privacy">Privacy</Link><Link href="/terms">Terms</Link>
+          <Link href="/about">About</Link><Link href="/privacy">Privacy</Link><Link href="/terms">Terms</Link><a href="mailto:hello@pixeasy.site">Contact</a>
         </nav>
       </div>
     </footer>

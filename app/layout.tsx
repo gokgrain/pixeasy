@@ -7,13 +7,13 @@ export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: { default: "PixEasy — Easy Image Tools", template: "%s | PixEasy" },
   description: "Fast, free image tools that work privately in your browser.",
-  icons: { icon: "/favicon.svg", shortcut: "/favicon.svg" },
+  icons: { icon: [{ url: "/favicon.png", type: "image/png", sizes: "64x64" }], shortcut: "/favicon.png", apple: "/favicon.png" },
   openGraph: {
     type: "website",
     siteName: "PixEasy",
     title: "PixEasy — Easy Image Tools",
     description: "Fast. Free. Right in your browser.",
-    images: [{ url: "/og.png", width: 1728, height: 909, alt: "PixEasy — Easy Image Tools" }],
+    images: [{ url: "/og.png", width: 1731, height: 909, alt: "PixEasy — Easy Image Tools" }],
   },
   twitter: { card: "summary_large_image", title: "PixEasy — Easy Image Tools", description: "Fast. Free. Right in your browser.", images: ["/og.png"] },
 };

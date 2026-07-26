@@ -11,9 +11,9 @@ export const metadata: Metadata = {
 };
 
 const cards = [
-  { title: "Color Tools", copy: "Invert colors or create a clean grayscale image.", href: "/invert-image", icon: "◐" },
-  { title: "JPG & PNG Converter", copy: "Convert formats and control transparency with ease.", href: "/jpg-to-png", icon: "↔" },
-  { title: "Resize Image", copy: "Set width, height, or exact dimensions in pixels.", href: "/resize-image", icon: "↗" },
+  { title: "Invert Image", copy: "Invert image colors instantly.", href: "/invert-image", icon: "🎨" },
+  { title: "JPG ↔ PNG", copy: "Convert images in seconds.", href: "/jpg-to-png", icon: "🖼️" },
+  { title: "Resize Image", copy: "Resize without installing software.", href: "/resize-image", icon: "📐" },
 ];
 
 export default function Home() {
@@ -22,13 +22,13 @@ export default function Home() {
       <Header />
       <main>
         <section className="hero">
-          <div className="eyebrow">Private image editing, made simple</div>
+          <div className="eyebrow">Fast, free image tools</div>
           <h1>Easy Image Tools</h1>
           <p className="hero-subtitle">Fast. Free. Right in your browser.</p>
           <HomeUpload />
-          <div className="trust-row" aria-label="PixEasy benefits">
-            {["100% Free", "No Sign-up", "No Watermark", "Processed locally"].map((item) => (
-              <span key={item}><b aria-hidden="true">✓</b>{item}</span>
+          <div className="trust-row" aria-label="Why people choose PixEasy">
+            {["100% Free", "No Sign-up", "No Watermark", "Processed Locally"].map((item) => (
+              <span key={item}><b aria-hidden="true">✓</b><span>{item}</span></span>
             ))}
           </div>
         </section>
@@ -36,7 +36,7 @@ export default function Home() {
         <section className="home-tools wrap" id="all-tools" aria-labelledby="tools-title">
           <div className="section-heading">
             <div>
-              <p className="eyebrow">Everything you need</p>
+              <p className="eyebrow">Three simple tools</p>
               <h2 id="tools-title">Pick a tool and get it done</h2>
             </div>
             <p>No uploads, accounts, or complicated settings.</p>
