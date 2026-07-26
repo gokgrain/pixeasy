@@ -5,7 +5,6 @@ import Link from "next/link";
 import { UploadDropzone } from "./upload-dropzone";
 import { ImagePreview } from "./image-preview";
 import { ToolInfoCard, type ToolInfo } from "./tool-info-card";
-import { AdPlaceholder } from "./ad-placeholder";
 import { formatBytes, loadImage, renderImage, type LoadedImage } from "@/lib/image-processing";
 import type { PixelMode } from "@/lib/pixels";
 import { takePendingImage, type PendingImageAction } from "@/lib/pending-image";
@@ -189,8 +188,12 @@ export function ImageTool({ config }: { config: ToolConfig }) {
         </div>
       )}
       {error && <p className="error" role="alert">{error}</p>}
+      <header className="tool-intro tool-intro-after-workspace">
+        <p className="eyebrow">Free online image tool</p>
+        <h1>{config.title}</h1>
+        <p>{config.description}</p>
+      </header>
       <div className="explanation">{config.explanation.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}</div>
-      <AdPlaceholder />
       <div className="info-section">
         <ToolInfoCard info={config.info} />
         <section className="info-card"><h2>Related tools</h2><div className="related-links">
