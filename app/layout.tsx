@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
-const siteUrl = "https://pixeasytools.com";
+const siteUrl = "https://www.pixeasytools.com";
 const title = "PixEasy — Free Online Image Tools";
 const description = "Fast, free online image tools. Convert PNG and JPG, resize images, invert colors, create grayscale images, and more. No signup. No watermark. Processed locally in your browser.";
 
