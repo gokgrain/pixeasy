@@ -137,6 +137,13 @@ h1,h2,h3,p { margin-top:0; }
 .related-links a { border:1px solid var(--line); padding:12px 13px; border-radius:9px; font-size:.84rem; font-weight:700; }
 .related-links a:hover { border-color:#ffc79d; color:var(--orange-dark); }
 .explanation { max-width:760px; margin:35px auto 0; color:#666970; line-height:1.7; font-size:.93rem; }
+.seo-copy { max-width:760px; margin:34px auto 0; }
+.seo-copy h2 { margin-bottom:10px; font-size:1.18rem; letter-spacing:-.025em; }
+.seo-copy p { margin:0; color:#62656b; font-size:.9rem; line-height:1.75; }
+.faq-copy dl { margin:0; }
+.faq-copy dl>div { padding:14px 0; border-bottom:1px solid var(--line); }
+.faq-copy dt { font-size:.88rem; font-weight:760; }
+.faq-copy dd { margin:5px 0 0; color:#666970; font-size:.84rem; line-height:1.6; }
 .legal { max-width:760px; padding:72px 0 100px; line-height:1.75; }
 .legal h1 { font-size:clamp(2.3rem,6vw,3.6rem); letter-spacing:-.05em; }
 .legal h2 { margin-top:34px; }

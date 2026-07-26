@@ -10,7 +10,16 @@ import type { PixelMode } from "@/lib/pixels";
 import { takePendingImage, type PendingImageAction } from "@/lib/pending-image";
 
 export type ToolKind = "invert" | "grayscale" | "jpg-png" | "png-jpg" | "resize";
-export type ToolConfig = { kind: ToolKind; title: string; description: string; info: ToolInfo; explanation: string[] };
+export type ToolConfig = {
+  kind: ToolKind;
+  path: string;
+  title: string;
+  description: string;
+  info: ToolInfo;
+  explanation: string[];
+  about: string;
+  faqs: { question: string; answer: string }[];
+};
 
 export function ImageTool({ config }: { config: ToolConfig }) {
   const [pendingImage] = useState(() => takePendingImage());
@@ -213,6 +222,16 @@ export function ImageTool({ config }: { config: ToolConfig }) {
         <p>{displayDescription}</p>
       </header>
       <div className="explanation">{displayExplanation.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}</div>
+      <section className="seo-copy" aria-labelledby="about-tool-title">
+        <h2 id="about-tool-title">About this tool</h2>
+        <p>{config.about}</p>
+      </section>
+      <section className="seo-copy faq-copy" aria-labelledby="common-questions-title">
+        <h2 id="common-questions-title">Common Questions</h2>
+        <dl>
+          {config.faqs.map((item) => <div key={item.question}><dt>{item.question}</dt><dd>{item.answer}</dd></div>)}
+        </dl>
+      </section>
       <div className="info-section">
         <section className="info-card"><h2>Related tools</h2><div className="related-links">
           <Link href="/invert-image">Invert image</Link><Link href="/grayscale-image">Grayscale image</Link><Link href="/jpg-to-png">JPG to PNG</Link><Link href="/png-to-jpg">PNG to JPG</Link><Link href="/resize-image">Resize image</Link>

@@ -5,9 +5,10 @@ import { Footer, Header } from "@/components/site-shell";
 import { HomeUpload } from "@/components/home-upload";
 
 export const metadata: Metadata = {
-  title: "Easy Image Tools",
-  description: "Free image converters, color tools, and resizing that run privately in your browser.",
+  title: { absolute: "PixEasy — Free Online Image Tools" },
+  description: "Fast, free online image tools. Convert PNG and JPG, resize images, invert colors, and create grayscale images locally in your browser.",
   alternates: { canonical: "/" },
+  openGraph: { title: "PixEasy — Free Online Image Tools", description: "Fast. Free. Right in your browser.", url: "/" },
 };
 
 const cards = [
