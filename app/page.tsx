@@ -53,6 +53,10 @@ export default function Home() {
               </Link>
             ))}
           </div>
+          <div className="home-explanation">
+            <h2>Simple tools, private by design</h2>
+            <p>Choose one task, upload your image, and download the result in seconds. Every edit runs locally in your browser, so your files never leave your device.</p>
+          </div>
           <AdPlaceholder />
         </section>
       </main>

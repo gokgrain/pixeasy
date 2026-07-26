@@ -5,6 +5,7 @@ import Link from "next/link";
 import { UploadDropzone } from "./upload-dropzone";
 import { ImagePreview } from "./image-preview";
 import { ToolInfoCard, type ToolInfo } from "./tool-info-card";
+import { AdPlaceholder } from "./ad-placeholder";
 import { formatBytes, loadImage, renderImage, type LoadedImage } from "@/lib/image-processing";
 import type { PixelMode } from "@/lib/pixels";
 
@@ -175,13 +176,14 @@ export function ImageTool({ config }: { config: ToolConfig }) {
         </div>
       )}
       {error && <p className="error" role="alert">{error}</p>}
+      <div className="explanation">{config.explanation.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}</div>
+      <AdPlaceholder />
       <div className="info-section">
         <ToolInfoCard info={config.info} />
         <section className="info-card"><h2>Related tools</h2><div className="related-links">
           <Link href="/invert-image">Invert image</Link><Link href="/grayscale-image">Grayscale image</Link><Link href="/jpg-to-png">JPG to PNG</Link><Link href="/png-to-jpg">PNG to JPG</Link><Link href="/resize-image">Resize image</Link>
         </div></section>
       </div>
-      <div className="explanation">{config.explanation.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}</div>
     </>
   );
 }
