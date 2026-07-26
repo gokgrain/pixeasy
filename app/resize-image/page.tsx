@@ -1,0 +1,4 @@
+import type { Metadata } from "next";
+import { ToolPage } from "@/components/tool-page";
+export const metadata: Metadata = { title:"Resize Image Online", description:"Resize JPG, PNG, or WebP images to a width, height, or exact pixel size.", alternates:{canonical:"/resize-image"}, openGraph:{title:"Resize Image Online | PixEasy",description:"Resize images privately to exact pixel dimensions."} };
+export default function Page(){return <ToolPage config={{kind:"resize",title:"Resize Image",description:"Set a width, height, or exact dimensions and preview the result live.",info:{tool:"Resize Image",purpose:"Change pixel dimensions",input:"JPG, PNG, WebP",output:"PNG or JPG"},explanation:["Set width or height to preserve the original aspect ratio automatically.","Exact dimensions stretch the image to fit the values you enter without preserving its proportions.","The full requested dimensions are used for downloads even when the on-screen preview is scaled."]}}/>}

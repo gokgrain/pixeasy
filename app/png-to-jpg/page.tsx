@@ -1,0 +1,4 @@
+import type { Metadata } from "next";
+import { ToolPage } from "@/components/tool-page";
+export const metadata: Metadata = { title:"PNG to JPG Converter", description:"Convert PNG to JPG with a white, black, or custom transparency background.", alternates:{canonical:"/png-to-jpg"}, openGraph:{title:"PNG to JPG Converter | PixEasy",description:"Choose a background and JPG quality before downloading."} };
+export default function Page(){return <ToolPage config={{kind:"png-jpg",title:"PNG to JPG",description:"Convert PNG to JPG and choose how transparent areas should look.",info:{tool:"PNG to JPG",purpose:"Create a photographic JPG",input:"PNG",output:"JPG"},explanation:["JPG does not support transparency, so transparent pixels need a solid background.","Choose white, black, or a custom color and adjust quality to balance detail and file size.","A quality setting of 90% is a strong default for most images."]}}/>}

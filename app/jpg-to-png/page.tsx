@@ -1,0 +1,4 @@
+import type { Metadata } from "next";
+import { ToolPage } from "@/components/tool-page";
+export const metadata: Metadata = { title:"JPG to PNG Converter", description:"Convert JPG to PNG and optionally remove a white background.", alternates:{canonical:"/jpg-to-png"}, openGraph:{title:"JPG to PNG Converter | PixEasy",description:"Convert JPG to PNG locally and for free."} };
+export default function Page(){return <ToolPage config={{kind:"jpg-png",title:"JPG to PNG",description:"Convert a JPG to lossless PNG, with optional white background removal.",info:{tool:"JPG to PNG",purpose:"Convert format or remove white",input:"JPG, JPEG",output:"PNG"},explanation:["PNG is useful when you need lossless output or transparency.","White background removal uses color distance rather than an exact pixel match, and softly feathers pixels near the threshold.","Adjust the tolerance until the checkerboard preview shows the result you want."]}}/>}
