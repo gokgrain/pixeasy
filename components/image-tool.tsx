@@ -8,11 +8,13 @@ import { ToolInfoCard, type ToolInfo } from "./tool-info-card";
 import { AdPlaceholder } from "./ad-placeholder";
 import { formatBytes, loadImage, renderImage, type LoadedImage } from "@/lib/image-processing";
 import type { PixelMode } from "@/lib/pixels";
+import { takePendingImage, type PendingImageAction } from "@/lib/pending-image";
 
 export type ToolKind = "invert" | "grayscale" | "jpg-png" | "png-jpg" | "resize";
 export type ToolConfig = { kind: ToolKind; title: string; description: string; info: ToolInfo; explanation: string[] };
 
 export function ImageTool({ config }: { config: ToolConfig }) {
+  const [pendingImage] = useState(() => takePendingImage());
   const [file, setFile] = useState<File | null>(null);
   const [loaded, setLoaded] = useState<LoadedImage | null>(null);
   const [originalUrl, setOriginalUrl] = useState("");
@@ -40,10 +42,11 @@ export function ImageTool({ config }: { config: ToolConfig }) {
   useEffect(() => () => { if (originalUrl) URL.revokeObjectURL(originalUrl); }, [originalUrl]);
   useEffect(() => () => { if (resultUrl) URL.revokeObjectURL(resultUrl); }, [resultUrl]);
 
-  async function chooseFile(nextFile: File) {
+  async function chooseFile(nextFile: File, pendingAction?: PendingImageAction) {
     setBusy(true); setError("");
-    setRemoveWhite(false); setTolerance(20);
-    if (config.kind === "jpg-png" && nextFile.type !== "image/jpeg") {
+    setRemoveWhite(pendingAction === "remove-background"); setTolerance(20);
+    const alternatePngInput = pendingAction === "webp-png" || pendingAction === "remove-background";
+    if (config.kind === "jpg-png" && nextFile.type !== "image/jpeg" && !alternatePngInput) {
       setError("JPG to PNG accepts JPG or JPEG files. Choose a JPG image to continue."); setBusy(false); return;
     }
     if (config.kind === "png-jpg" && nextFile.type !== "image/png") {
@@ -59,6 +62,16 @@ export function ImageTool({ config }: { config: ToolConfig }) {
       setError("This image could not be decoded. Try saving it again as a standard JPG, PNG, or WebP file.");
     } finally { setBusy(false); }
   }
+
+  useEffect(() => {
+    if (!pendingImage) return;
+    const timer = window.setTimeout(() => {
+      void chooseFile(pendingImage.file, pendingImage.action);
+    }, 0);
+    return () => window.clearTimeout(timer);
+    // The pending image is consumed once when this tool opens.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pendingImage]);
 
   useEffect(() => {
     if (!loaded) return;

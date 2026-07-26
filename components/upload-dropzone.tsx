@@ -12,7 +12,15 @@ export function validateImageFile(file: File) {
   return "";
 }
 
-export function UploadDropzone({ onFile, compact = false }: { onFile: (file: File) => void; compact?: boolean }) {
+export function UploadDropzone({
+  onFile,
+  compact = false,
+  preview,
+}: {
+  onFile: (file: File) => void;
+  compact?: boolean;
+  preview?: { url: string; name: string };
+}) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [dragging, setDragging] = useState(false);
   const [error, setError] = useState("");
@@ -40,16 +48,29 @@ export function UploadDropzone({ onFile, compact = false }: { onFile: (file: Fil
       >
         <input ref={inputRef} type="file" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp" hidden
           onChange={(event) => { accept(event.target.files?.[0]); event.currentTarget.value = ""; }} />
-        <span className="upload-icon" aria-hidden="true">↑</span>
-        <strong>Drop your image here</strong>
-        <small>or choose a file from your device</small>
-        <button className="upload-button" type="button" onClick={(event) => { event.stopPropagation(); inputRef.current?.click(); }}>Choose image</button>
-        <span className="format-list" aria-label="Supported formats">
-          <span><b aria-hidden="true">✓</b> JPG</span>
-          <span><b aria-hidden="true">✓</b> PNG</span>
-          <span><b aria-hidden="true">✓</b> WebP</span>
-          <span className="size-limit">Maximum 50 MB</span>
-        </span>
+        {preview ? (
+          <div className="selected-image">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={preview.url} alt={`Selected image: ${preview.name}`} />
+            <div className="selected-image-meta">
+              <span><strong>{preview.name}</strong><small>Drop another image here to replace it</small></span>
+              <button className="upload-button" type="button" onClick={(event) => { event.stopPropagation(); inputRef.current?.click(); }}>Replace image</button>
+            </div>
+          </div>
+        ) : (
+          <>
+            <span className="upload-icon" aria-hidden="true">↑</span>
+            <strong>Drop your image here</strong>
+            <small>or choose a file from your device</small>
+            <button className="upload-button" type="button" onClick={(event) => { event.stopPropagation(); inputRef.current?.click(); }}>Choose image</button>
+            <span className="format-list" aria-label="Supported formats">
+              <span><b aria-hidden="true">✓</b> JPG</span>
+              <span><b aria-hidden="true">✓</b> PNG</span>
+              <span><b aria-hidden="true">✓</b> WebP</span>
+              <span className="size-limit">Maximum 50 MB</span>
+            </span>
+          </>
+        )}
       </div>
       {error && <p className="error" role="alert">{error}</p>}
     </>
