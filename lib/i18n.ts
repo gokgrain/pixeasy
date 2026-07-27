@@ -4,7 +4,7 @@ import en from "@/messages/en.json";
 import ko from "@/messages/ko.json";
 import ja from "@/messages/ja.json";
 
-export const siteUrl = "https://www.pixeasytools.com";
+export const siteUrl = "https://pixeasytools.com";
 export const locales = ["en", "ko", "ja"] as const;
 export const localizedLocales = ["ko", "ja"] as const;
 export type Locale = (typeof locales)[number];

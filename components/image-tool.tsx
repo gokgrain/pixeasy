@@ -1,14 +1,13 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import Link from "next/link";
 import { UploadDropzone } from "./upload-dropzone";
 import { ImagePreview } from "./image-preview";
 import type { ToolInfo } from "./tool-info-card";
 import { formatBytes, loadImage, renderImage, type LoadedImage } from "@/lib/image-processing";
 import type { PixelMode } from "@/lib/pixels";
 import { takePendingImage, type PendingImageAction } from "@/lib/pending-image";
-import { localePath, type Locale, type Messages } from "@/lib/i18n";
+import type { Locale, Messages } from "@/lib/i18n";
 
 export type ToolKind = "invert" | "grayscale" | "jpg-png" | "png-jpg" | "resize";
 export type ToolConfig = {
@@ -147,15 +146,12 @@ export function ImageTool({ config }: { config: ToolConfig }) {
         ? t.invertDescription
         : t.grayscaleDescription
     : config.description;
-  const displayExplanation = isColorTool
-    ? mode === "original"
-      ? t.originalExplanation
-      : mode === "invert"
-        ? t.invertExplanation
-        : t.grayscaleExplanation
-    : config.explanation;
   return (
     <>
+      <header className="tool-intro">
+        <h1>{displayTitle}</h1>
+        <p>{displayDescription}</p>
+      </header>
       {!loaded ? <UploadDropzone onFile={chooseFile} compact messages={config.messages.upload} /> : (
         <div className="workspace">
           <section className="panel" aria-labelledby="preview-title">
@@ -220,27 +216,6 @@ export function ImageTool({ config }: { config: ToolConfig }) {
         </div>
       )}
       {error && <p className="error" role="alert">{error}</p>}
-      <header className="tool-intro tool-intro-after-workspace">
-        <p className="eyebrow">{t.freeTool}</p>
-        <h1>{displayTitle}</h1>
-        <p>{displayDescription}</p>
-      </header>
-      <div className="explanation">{displayExplanation.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}</div>
-      <section className="seo-copy" aria-labelledby="about-tool-title">
-        <h2 id="about-tool-title">{t.about}</h2>
-        <p>{config.about}</p>
-      </section>
-      <section className="seo-copy faq-copy" aria-labelledby="common-questions-title">
-        <h2 id="common-questions-title">{t.questions}</h2>
-        <dl>
-          {config.faqs.map((item) => <div key={item.question}><dt>{item.question}</dt><dd>{item.answer}</dd></div>)}
-        </dl>
-      </section>
-      <div className="info-section">
-        <section className="info-card"><h2>{t.related}</h2><div className="related-links">
-          {(["invert","grayscale","jpg-png","png-jpg","resize"] as ToolKind[]).map((kind) => <Link key={kind} href={localePath(config.locale, `/${config.messages.tools[kind].slug}`)}>{config.messages.tools[kind].title}</Link>)}
-        </div></section>
-      </div>
     </>
   );
 }

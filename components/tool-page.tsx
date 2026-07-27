@@ -1,10 +1,14 @@
 import { ImageTool, type ToolConfig } from "./image-tool";
 import { Footer, Header } from "./site-shell";
 import { AdPlaceholder } from "./ad-placeholder";
+import { ToolSeoContent } from "./tool-seo-content";
+import { getToolSeoContent } from "@/content/tool-seo";
+import { siteUrl } from "@/lib/i18n";
 
 export function ToolPage({ config }: { config: ToolConfig }) {
-  const siteUrl = "https://www.pixeasytools.com";
   const pageUrl = `${siteUrl}${config.path}`;
+  const seoContent = getToolSeoContent(config.locale, config.kind);
+  const faqs = [...config.faqs, ...seoContent.extraFaqs];
   const structuredData = {
     "@context": "https://schema.org",
     "@graph": [
@@ -27,14 +31,23 @@ export function ToolPage({ config }: { config: ToolConfig }) {
           { "@type": "ListItem", position: 2, name: config.title, item: pageUrl },
         ],
       },
+      {
+        "@type": "FAQPage",
+        mainEntity: faqs.map((item) => ({
+          "@type": "Question",
+          name: item.question,
+          acceptedAnswer: { "@type": "Answer", text: item.answer },
+        })),
+      },
     ],
   };
   return (
     <>
       <Header locale={config.locale} messages={config.messages} />
       <main className="wrap tool-main">
-        <AdPlaceholder label={config.messages.nav.advertisement} />
         <ImageTool config={config} />
+        <AdPlaceholder label={config.messages.nav.advertisement} />
+        <ToolSeoContent config={config} content={seoContent} />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData).replace(/</g, "\\u003c") }} />
       </main>
       <Footer locale={config.locale} messages={config.messages} />
