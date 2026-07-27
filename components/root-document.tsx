@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { getMessages, siteUrl, type Locale } from "@/lib/i18n";
 
 const title = "PixEasy — Free Online Image Tools";
-const description = "Fast, free online image tools. Convert PNG and JPG, resize images, invert colors, create grayscale images, and more. No signup. No watermark. Processed locally in your browser.";
+const description = "Free image tools for PNG, JPG, resize, grayscale, and invert colors.";
 
 export const rootMetadata: Metadata = {
   metadataBase: new URL(siteUrl),
