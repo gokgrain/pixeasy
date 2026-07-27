@@ -37,4 +37,4 @@ The sitemap combines the central locale list with every indexable path and emits
 - Keep equivalent content and slugs aligned across message files.
 - Add every indexable route to the sitemap path registry.
 - Verify canonical and hreflang on each language after changes.
-- Do not redirect crawlers based on language. Browser detection runs only on the English homepage and respects a saved manual choice.
+- Do not redirect visitors or crawlers based on language. Every localized URL renders its own indexable page, and language changes happen only through crawlable user-selected links.

@@ -3,13 +3,11 @@
 import Link from "next/link";
 import { LanguageSwitcher } from "./language-switcher";
 import { localePath, type Locale, type Messages } from "@/lib/i18n";
-import { LanguageRedirect } from "./language-redirect";
 
 export function Header({ locale, messages }: { locale: Locale; messages: Messages }) {
   const home = localePath(locale);
   return (
     <header className="site-header">
-      {locale === "en" ? <LanguageRedirect /> : null}
       <div className="wrap header-inner">
         <Link
           className="logo"
