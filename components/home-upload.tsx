@@ -5,8 +5,9 @@ import { useRouter } from "next/navigation";
 import { setPendingImage, type PendingImageAction } from "@/lib/pending-image";
 import { AdPlaceholder } from "./ad-placeholder";
 import { UploadDropzone } from "./upload-dropzone";
+import { localePath, type Locale, type Messages } from "@/lib/i18n";
 
-export function HomeUpload() {
+export function HomeUpload({ locale, messages }: { locale: Locale; messages: Messages }) {
   const router = useRouter();
   const uploadRef = useRef<HTMLDivElement>(null);
   const [file, setFile] = useState<File | null>(null);
@@ -29,22 +30,22 @@ export function HomeUpload() {
   }, [file]);
 
   const conversion = file?.type === "image/jpeg"
-    ? { label: "JPG → PNG", action: "jpg-png" as const, href: "/jpg-to-png" }
+      ? { label: "JPG → PNG", action: "jpg-png" as const, href: localePath(locale, "/jpg-to-png") }
     : file?.type === "image/png"
-      ? { label: "PNG → JPG", action: "png-jpg" as const, href: "/png-to-jpg" }
+      ? { label: "PNG → JPG", action: "png-jpg" as const, href: localePath(locale, "/png-to-jpg") }
       : null;
 
   const actions: { label: string; description?: string; icon: string; action: PendingImageAction; href: string }[] = [
     ...(conversion ? [{ ...conversion, icon: "↗" }] : []),
     ...(file?.type === "image/jpeg" ? [{
-      label: "Remove Background",
-      description: "Create a transparent PNG",
+      label: messages.upload.removeBackground,
+      description: messages.upload.transparentPng,
       icon: "◫",
       action: "remove-background" as const,
-      href: "/jpg-to-png",
+      href: localePath(locale, "/jpg-to-png"),
     }] : []),
-    { label: "Grayscale", icon: "◐", action: "grayscale", href: "/grayscale-image" },
-    { label: "Invert Colors", icon: "◑", action: "invert", href: "/invert-image" },
+    { label: messages.upload.grayscale, icon: "◐", action: "grayscale", href: localePath(locale, "/grayscale-image") },
+    { label: messages.upload.invert, icon: "◑", action: "invert", href: localePath(locale, "/invert-image") },
   ];
 
   function openTool(action: PendingImageAction, href: string) {
@@ -57,13 +58,14 @@ export function HomeUpload() {
     <div ref={uploadRef} className={`home-upload ${file ? "has-image" : ""}`}>
       <UploadDropzone
         onFile={setFile}
+        messages={messages.upload}
         preview={file ? { url: previewUrl, name: file.name } : undefined}
       />
       {file && (
         <>
           <section className="quick-actions" aria-labelledby="quick-actions-title">
             <div className="quick-actions-heading">
-              <h2 id="quick-actions-title">Choose an action</h2>
+              <h2 id="quick-actions-title">{messages.upload.chooseAction}</h2>
             </div>
             <div className="action-grid">
               {actions.map((item) => (
@@ -74,7 +76,7 @@ export function HomeUpload() {
               ))}
             </div>
           </section>
-          <AdPlaceholder />
+          <AdPlaceholder label={messages.nav.advertisement} />
         </>
       )}
     </div>

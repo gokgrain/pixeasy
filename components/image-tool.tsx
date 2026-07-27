@@ -8,10 +8,13 @@ import type { ToolInfo } from "./tool-info-card";
 import { formatBytes, loadImage, renderImage, type LoadedImage } from "@/lib/image-processing";
 import type { PixelMode } from "@/lib/pixels";
 import { takePendingImage, type PendingImageAction } from "@/lib/pending-image";
+import { localePath, type Locale, type Messages } from "@/lib/i18n";
 
 export type ToolKind = "invert" | "grayscale" | "jpg-png" | "png-jpg" | "resize";
 export type ToolConfig = {
   kind: ToolKind;
+  locale: Locale;
+  messages: Messages;
   path: string;
   title: string;
   description: string;
@@ -22,6 +25,7 @@ export type ToolConfig = {
 };
 
 export function ImageTool({ config }: { config: ToolConfig }) {
+  const t = config.messages.toolUi;
   const [pendingImage] = useState(() => takePendingImage());
   const [file, setFile] = useState<File | null>(null);
   const [loaded, setLoaded] = useState<LoadedImage | null>(null);
@@ -55,10 +59,10 @@ export function ImageTool({ config }: { config: ToolConfig }) {
     setRemoveWhite(pendingAction === "remove-background"); setTolerance(20);
     const alternatePngInput = pendingAction === "remove-background";
     if (config.kind === "jpg-png" && nextFile.type !== "image/jpeg" && !alternatePngInput) {
-      setError("JPG to PNG accepts JPG or JPEG files. Choose a JPG image to continue."); setBusy(false); return;
+      setError(t.jpgOnly); setBusy(false); return;
     }
     if (config.kind === "png-jpg" && nextFile.type !== "image/png") {
-      setError("PNG to JPG accepts PNG files. Choose a PNG image to continue."); setBusy(false); return;
+      setError(t.pngOnly); setBusy(false); return;
     }
     try {
       const nextLoaded = await loadImage(nextFile);
@@ -67,7 +71,7 @@ export function ImageTool({ config }: { config: ToolConfig }) {
       setWidth(nextLoaded.width); setHeight(nextLoaded.height);
       setOriginalUrl(URL.createObjectURL(nextFile));
     } catch {
-      setError("This image could not be decoded. Try saving it again as a standard JPG, PNG, or WebP file.");
+      setError(t.decodeError);
     } finally { setBusy(false); }
   }
 
@@ -99,9 +103,9 @@ export function ImageTool({ config }: { config: ToolConfig }) {
       setResultBlob(blob);
       setResultUrl(URL.createObjectURL(blob));
     }).catch((reason: unknown) => {
-      if (currentId === renderId.current) setError(reason instanceof Error ? reason.message : "Image processing failed.");
+      if (currentId === renderId.current) setError(reason instanceof Error ? reason.message : t.processingError);
     }).finally(() => { if (currentId === renderId.current) setBusy(false); });
-  }, [loaded, mode, format, quality, removeWhite, tolerance, backgroundChoice, customBackground, width, height, config.kind]);
+  }, [loaded, mode, format, quality, removeWhite, tolerance, backgroundChoice, customBackground, width, height, config.kind, t.processingError]);
 
   function setResizeValue(dimension: "width" | "height", value: number) {
     if (!loaded) return;
@@ -134,107 +138,107 @@ export function ImageTool({ config }: { config: ToolConfig }) {
   const transparentResult = format === "png" && ((config.kind === "jpg-png" && removeWhite) || file?.type === "image/png");
   const isColorTool = config.kind === "invert" || config.kind === "grayscale";
   const displayTitle = isColorTool
-    ? mode === "original" ? "Original Image" : mode === "invert" ? "Invert Image" : "Grayscale Image"
+    ? mode === "original" ? t.originalTitle : mode === "invert" ? config.messages.tools.invert.title : config.messages.tools.grayscale.title
     : config.title;
   const displayDescription = isColorTool
     ? mode === "original"
-      ? "Keep the image unchanged while choosing an output format."
+      ? t.originalDescription
       : mode === "invert"
-        ? "Reverse every color for a clean photographic negative effect."
-        : "Create a balanced black-and-white image using weighted luminance."
+        ? t.invertDescription
+        : t.grayscaleDescription
     : config.description;
   const displayExplanation = isColorTool
     ? mode === "original"
-      ? ["The original color values are preserved without applying an effect.", "Choose PNG to preserve transparency or JPG for a smaller photographic file."]
+      ? t.originalExplanation
       : mode === "invert"
-        ? ["Inverting replaces each RGB value with its opposite while preserving transparency.", "The preview updates instantly so you can compare the result before saving."]
-        : ["This tool uses the weighted formula 0.299R + 0.587G + 0.114B to match human brightness perception.", "PNG output preserves transparency; JPG output is ideal for smaller photographic files."]
+        ? t.invertExplanation
+        : t.grayscaleExplanation
     : config.explanation;
   return (
     <>
-      {!loaded ? <UploadDropzone onFile={chooseFile} compact /> : (
+      {!loaded ? <UploadDropzone onFile={chooseFile} compact messages={config.messages.upload} /> : (
         <div className="workspace">
           <section className="panel" aria-labelledby="preview-title">
-            <div className="panel-title"><h2 id="preview-title">Preview</h2><button type="button" className="reset-btn" onClick={reset}>Reset</button></div>
+            <div className="panel-title"><h2 id="preview-title">{t.preview}</h2><button type="button" className="reset-btn" onClick={reset}>{t.reset}</button></div>
             <div className="preview-grid">
-              <ImagePreview label="Original" url={originalUrl} transparent={file?.type === "image/png"} />
-              <ImagePreview label={busy ? "Processing…" : "Result"} url={resultUrl} transparent={transparentResult} />
+              <ImagePreview label={t.original} url={originalUrl} transparent={file?.type === "image/png"} />
+              <ImagePreview label={busy ? t.processing : t.result} url={resultUrl} transparent={transparentResult} empty={t.processing} />
             </div>
             <div className="file-details" aria-live="polite">
-              <span>Original: {loaded.width} × {loaded.height}px</span><span>{formatBytes(file?.size ?? 0)}</span>
-              <span>Output: {config.kind === "resize" ? `${width} × ${height}px` : `${loaded.width} × ${loaded.height}px`}</span>
+              <span>{t.original}: {loaded.width} × {loaded.height}px</span><span>{formatBytes(file?.size ?? 0)}</span>
+              <span>{t.output}: {config.kind === "resize" ? `${width} × ${height}px` : `${loaded.width} × ${loaded.height}px`}</span>
               {resultBlob && <span>{formatBytes(resultBlob.size)}</span>}
             </div>
           </section>
           <aside className="panel controls-panel">
-            <div className="panel-title"><h2>Options</h2></div>
+            <div className="panel-title"><h2>{t.options}</h2></div>
             <div className="controls">
               {(config.kind === "invert" || config.kind === "grayscale") && (
-                <div className="field"><span>Color effect</span><div className="segmented">
-                  {(["original","invert","grayscale"] as PixelMode[]).map((item) => <button key={item} type="button" className={mode === item ? "active" : ""} onClick={() => setMode(item)}>{item[0].toUpperCase()+item.slice(1)}</button>)}
+                <div className="field"><span>{t.colorEffect}</span><div className="segmented">
+                  {(["original","invert","grayscale"] as PixelMode[]).map((item) => <button key={item} type="button" className={mode === item ? "active" : ""} onClick={() => setMode(item)}>{{original:t.originalMode,invert:t.invertMode,grayscale:t.grayscaleMode}[item]}</button>)}
                 </div></div>
               )}
               {config.kind === "jpg-png" && <>
                 <fieldset className="conversion-mode">
-                  <legend>Conversion mode</legend>
+                  <legend>{t.conversionMode}</legend>
                   <label className={removeWhite ? "mode-option" : "mode-option selected"}>
                     <input type="radio" name="conversion-mode" checked={!removeWhite} onChange={() => setRemoveWhite(false)} />
-                    <span><strong>Standard PNG</strong><small>Keep the original image exactly as it is.</small></span>
+                    <span><strong>{t.standardPng}</strong><small>{t.standardPngHelp}</small></span>
                   </label>
                   <label className={removeWhite ? "mode-option selected" : "mode-option"}>
                     <input type="radio" name="conversion-mode" checked={removeWhite} onChange={() => setRemoveWhite(true)} />
-                    <span><strong>Transparent PNG</strong><small>Remove white and near-white background.</small></span>
+                    <span><strong>{t.transparentPng}</strong><small>{t.transparentPngHelp}</small></span>
                   </label>
                 </fieldset>
-                {removeWhite && <label className="field"><span>White tolerance: {tolerance}</span><input type="range" min="0" max="100" value={tolerance} onChange={(event) => setTolerance(Number(event.target.value))} /></label>}
+                {removeWhite && <label className="field"><span>{t.whiteTolerance}: {tolerance}</span><input type="range" min="0" max="100" value={tolerance} onChange={(event) => setTolerance(Number(event.target.value))} /></label>}
               </>}
               {config.kind === "png-jpg" && <>
-                <div className="field"><span>Background</span><div className="segmented">
-                  {(["white","black","custom"] as const).map((item) => <button type="button" key={item} className={backgroundChoice === item ? "active" : ""} onClick={() => setBackgroundChoice(item)}>{item[0].toUpperCase()+item.slice(1)}</button>)}
+                <div className="field"><span>{t.background}</span><div className="segmented">
+                  {(["white","black","custom"] as const).map((item) => <button type="button" key={item} className={backgroundChoice === item ? "active" : ""} onClick={() => setBackgroundChoice(item)}>{{white:t.white,black:t.black,custom:t.custom}[item]}</button>)}
                 </div></div>
-                {backgroundChoice === "custom" && <label className="field"><span>Custom background color</span><input type="color" value={customBackground} onChange={(event) => setCustomBackground(event.target.value)} /></label>}
+                {backgroundChoice === "custom" && <label className="field"><span>{t.customBackground}</span><input type="color" value={customBackground} onChange={(event) => setCustomBackground(event.target.value)} /></label>}
               </>}
               {config.kind === "resize" && <>
-                <div className="field"><span>Resize mode</span><div className="segmented">
-                  <button type="button" className={resizeMode === "width" ? "active" : ""} onClick={() => changeResizeMode("width")}>Set width</button>
-                  <button type="button" className={resizeMode === "height" ? "active" : ""} onClick={() => changeResizeMode("height")}>Set height</button>
-                  <button type="button" className={resizeMode === "exact" ? "active" : ""} onClick={() => changeResizeMode("exact")}>Exact</button>
+                <div className="field"><span>{t.resizeMode}</span><div className="segmented">
+                  <button type="button" className={resizeMode === "width" ? "active" : ""} onClick={() => changeResizeMode("width")}>{t.setWidth}</button>
+                  <button type="button" className={resizeMode === "height" ? "active" : ""} onClick={() => changeResizeMode("height")}>{t.setHeight}</button>
+                  <button type="button" className={resizeMode === "exact" ? "active" : ""} onClick={() => changeResizeMode("exact")}>{t.exact}</button>
                 </div></div>
                 <div className="dimension-row">
-                  <label className="field"><span>Width (px)</span><input type="number" min="1" max="32767" value={width} disabled={resizeMode === "height"} onChange={(e) => setResizeValue("width", Number(e.target.value))} /></label>
-                  <label className="field"><span>Height (px)</span><input type="number" min="1" max="32767" value={height} disabled={resizeMode === "width"} onChange={(e) => setResizeValue("height", Number(e.target.value))} /></label>
+                  <label className="field"><span>{t.width}</span><input type="number" min="1" max="32767" value={width} disabled={resizeMode === "height"} onChange={(e) => setResizeValue("width", Number(e.target.value))} /></label>
+                  <label className="field"><span>{t.height}</span><input type="number" min="1" max="32767" value={height} disabled={resizeMode === "width"} onChange={(e) => setResizeValue("height", Number(e.target.value))} /></label>
                 </div>
-                <p className="warning">Enlarging an image makes it bigger, but cannot restore missing detail.</p>
+                <p className="warning">{t.enlargeWarning}</p>
               </>}
               {config.kind !== "jpg-png" && config.kind !== "png-jpg" && (
-                <label className="field"><span>Output format</span><select value={format} onChange={(event) => setFormat(event.target.value as "png" | "jpg")}><option value="png">PNG</option><option value="jpg">JPG</option></select></label>
+                <label className="field"><span>{t.outputFormat}</span><select value={format} onChange={(event) => setFormat(event.target.value as "png" | "jpg")}><option value="png">PNG</option><option value="jpg">JPG</option></select></label>
               )}
-              {format === "jpg" && <label className="field"><span>JPG quality: {quality}%</span><input type="range" min="10" max="100" value={quality} onChange={(event) => setQuality(Number(event.target.value))} /></label>}
-              <div className="download-row"><button className="primary-btn" type="button" disabled={!resultBlob || busy} onClick={download}>{busy ? "Preparing image…" : `Download ${format.toUpperCase()}`}</button><span className="status">No watermark · processed locally</span></div>
+              {format === "jpg" && <label className="field"><span>{t.jpgQuality}: {quality}%</span><input type="range" min="10" max="100" value={quality} onChange={(event) => setQuality(Number(event.target.value))} /></label>}
+              <div className="download-row"><button className="primary-btn" type="button" disabled={!resultBlob || busy} onClick={download}>{busy ? t.preparing : t.download.replace("{format}", format.toUpperCase())}</button><span className="status">{t.status}</span></div>
             </div>
           </aside>
         </div>
       )}
       {error && <p className="error" role="alert">{error}</p>}
       <header className="tool-intro tool-intro-after-workspace">
-        <p className="eyebrow">Free online image tool</p>
+        <p className="eyebrow">{t.freeTool}</p>
         <h1>{displayTitle}</h1>
         <p>{displayDescription}</p>
       </header>
       <div className="explanation">{displayExplanation.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}</div>
       <section className="seo-copy" aria-labelledby="about-tool-title">
-        <h2 id="about-tool-title">About this tool</h2>
+        <h2 id="about-tool-title">{t.about}</h2>
         <p>{config.about}</p>
       </section>
       <section className="seo-copy faq-copy" aria-labelledby="common-questions-title">
-        <h2 id="common-questions-title">Common Questions</h2>
+        <h2 id="common-questions-title">{t.questions}</h2>
         <dl>
           {config.faqs.map((item) => <div key={item.question}><dt>{item.question}</dt><dd>{item.answer}</dd></div>)}
         </dl>
       </section>
       <div className="info-section">
-        <section className="info-card"><h2>Related tools</h2><div className="related-links">
-          <Link href="/invert-image">Invert image</Link><Link href="/grayscale-image">Grayscale image</Link><Link href="/jpg-to-png">JPG to PNG</Link><Link href="/png-to-jpg">PNG to JPG</Link><Link href="/resize-image">Resize image</Link>
+        <section className="info-card"><h2>{t.related}</h2><div className="related-links">
+          {(["invert","grayscale","jpg-png","png-jpg","resize"] as ToolKind[]).map((kind) => <Link key={kind} href={localePath(config.locale, `/${config.messages.tools[kind].slug}`)}>{config.messages.tools[kind].title}</Link>)}
         </div></section>
       </div>
     </>
