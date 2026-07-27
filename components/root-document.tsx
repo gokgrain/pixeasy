@@ -11,6 +11,7 @@ export const rootMetadata: Metadata = {
   description,
   keywords: ["image tools", "online image tools", "free image tools", "image converter", "photo tools", "browser image editor", "invert image", "grayscale image", "jpg to png", "png to jpg", "resize image"],
   robots: { index: true, follow: true, googleBot: { index: true, follow: true, "max-image-preview": "large", "max-snippet": -1, "max-video-preview": -1 } },
+  verification: { other: { "naver-site-verification": "9ea1f7590b151aa1bfd90d23151e955255e1fd6a" } },
   manifest: "/site.webmanifest",
   icons: {
     icon: [{ url: "/favicon.ico", sizes: "any" }, { url: "/favicon.png", type: "image/png", sizes: "64x64" }],
