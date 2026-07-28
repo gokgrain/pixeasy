@@ -11,7 +11,7 @@ export type Locale = (typeof locales)[number];
 export type LocalizedLocale = (typeof localizedLocales)[number];
 export type Messages = typeof en;
 export type ToolMessage = Messages["tools"][keyof Messages["tools"]];
-export const toolKinds = ["invert", "grayscale", "jpg-png", "png-jpg", "resize"] as const satisfies readonly ToolKind[];
+export const toolKinds = ["invert", "grayscale", "jpg-png", "png-jpg", "resize", "compress"] as const satisfies readonly ToolKind[];
 
 const dictionaries: Record<Locale, Messages> = {
   en,

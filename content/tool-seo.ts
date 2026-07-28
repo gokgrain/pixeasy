@@ -10,6 +10,21 @@ export type ToolSeoContent = {
 
 const content: Record<Locale, Record<ToolKind, ToolSeoContent>> = {
   en: {
+    compress: {
+      steps: ["Upload a large photo or image.", "Choose the target file size.", "Compress and download the result."],
+      practical: [
+        { heading: "How target-size compression works", body: "JPG and WebP are encoded repeatedly with an adaptive quality search. PixEasy keeps the best practical result at or below the target, and can reduce dimensions proportionally when quality changes alone are not enough." },
+        { heading: "Quality and dimensions", body: "Lower quality can reduce photographic detail without changing pixel dimensions. Dimension reduction removes pixels but can achieve much smaller files while preserving the original aspect ratio." },
+        { heading: "PNG and transparency", body: "PNG uses lossless compression and can preserve transparency, so its size may not fall as much as JPG or WebP. Format conversion is optional and never happens without your selection." },
+        { heading: "Useful target-size workflows", body: "Target compression is useful for online forms, job application attachments, email, profile photos, and website optimization when a file must fit an upload limit." },
+        { heading: "Private browser processing", body: "The source image is decoded and compressed locally in your browser. It is not uploaded, stored, or sent to an external image-processing service." },
+      ],
+      extraFaqs: [
+        { question: "Can I compress high-resolution smartphone photos?", answer: "Yes, when your device has enough memory. Very large images may work better in a desktop browser." },
+        { question: "What happens if the target cannot be reached?", answer: "PixEasy shows the closest achievable result and clearly marks that the target was not reached." },
+      ],
+      related: ["resize", "jpg-png", "png-jpg", "grayscale", "invert"],
+    },
     "jpg-png": {
       steps: ["Upload a JPG or JPEG image.", "Choose Standard PNG or Transparent PNG.", "Check the preview and download the PNG."],
       practical: [
@@ -77,6 +92,21 @@ const content: Record<Locale, Record<ToolKind, ToolSeoContent>> = {
     },
   },
   ko: {
+    compress: {
+      steps: ["고화질 사진이나 큰 이미지를 선택합니다.", "원하는 목표 파일 용량을 선택합니다.", "압축한 뒤 결과를 다운로드합니다."],
+      practical: [
+        { heading: "목표 용량 압축 방식", body: "JPG와 WebP는 적응형 품질 탐색으로 여러 품질을 비교해 목표 이하의 가장 좋은 실용적 결과를 찾습니다. 품질만으로 부족하면 가로세로 비율을 유지하며 픽셀 크기를 줄일 수 있습니다." },
+        { heading: "품질과 이미지 크기의 차이", body: "품질을 낮추면 픽셀 크기는 유지하면서 사진의 세부 표현이 줄어듭니다. 픽셀 크기를 줄이면 이미지 자체가 작아지지만 훨씬 작은 파일을 만들 수 있습니다." },
+        { heading: "PNG와 투명도", body: "PNG는 무손실 압축과 투명도를 유지할 수 있어 JPG나 WebP만큼 용량이 줄지 않을 수 있습니다. 형식 변환은 사용자가 직접 선택한 경우에만 진행됩니다." },
+        { heading: "목표 용량이 필요한 경우", body: "온라인 양식, 입사 지원 첨부 파일, 이메일, 프로필 사진, 웹사이트 이미지처럼 업로드 가능한 파일 용량을 맞춰야 할 때 유용합니다." },
+        { heading: "기기에서만 처리", body: "원본 이미지 읽기와 압축은 브라우저에서 이루어집니다. 파일은 업로드되거나 저장되지 않고 외부 이미지 처리 서비스로 전송되지 않습니다." },
+      ],
+      extraFaqs: [
+        { question: "고화질 스마트폰 사진도 압축할 수 있나요?", answer: "기기 메모리가 충분하면 가능합니다. 매우 큰 이미지는 데스크톱 브라우저에서 더 안정적으로 처리될 수 있습니다." },
+        { question: "목표 용량에 도달하지 못하면 어떻게 되나요?", answer: "가장 가까운 결과를 표시하고 목표를 달성하지 못했다는 사실을 명확하게 안내합니다." },
+      ],
+      related: ["resize", "jpg-png", "png-jpg", "grayscale", "invert"],
+    },
     "jpg-png": {
       steps: ["JPG 또는 JPEG 이미지를 선택합니다.", "일반 PNG 또는 투명 PNG를 선택합니다.", "미리보기를 확인하고 PNG를 다운로드합니다."],
       practical: [
@@ -144,6 +174,21 @@ const content: Record<Locale, Record<ToolKind, ToolSeoContent>> = {
     },
   },
   ja: {
+    compress: {
+      steps: ["高画質写真または大きな画像を選びます。", "目標ファイルサイズを選びます。", "圧縮して結果をダウンロードします。"],
+      practical: [
+        { heading: "目標サイズ圧縮の仕組み", body: "JPGとWebPは適応型品質検索で複数の品質を比較し、目標以下で実用的な最良結果を探します。品質だけで足りない場合は縦横比を保って寸法を縮小できます。" },
+        { heading: "品質と画像寸法の違い", body: "品質を下げるとピクセル寸法を保ちながら写真の細部が減ります。寸法を縮小するとピクセル数は減りますが、より小さいファイルを作れます。" },
+        { heading: "PNGと透明度", body: "PNGは可逆圧縮と透明度を保持できるため、JPGやWebPほど小さくならない場合があります。形式変換はユーザーが明示的に選んだ場合だけ行います。" },
+        { heading: "目標容量が役立つ場面", body: "オンラインフォーム、応募書類、メール添付、プロフィール写真、Webサイト画像など、アップロード容量に合わせたい場合に便利です。" },
+        { heading: "端末内で処理", body: "元画像の読み込みと圧縮はブラウザ内で行われます。ファイルはアップロード、保存、外部画像処理サービスへの送信をされません。" },
+      ],
+      extraFaqs: [
+        { question: "高画質のスマートフォン写真も圧縮できますか？", answer: "端末に十分なメモリがあれば可能です。非常に大きい画像はデスクトップブラウザのほうが安定します。" },
+        { question: "目標サイズに到達できない場合は？", answer: "最も近い結果を表示し、目標未達であることを明確に案内します。" },
+      ],
+      related: ["resize", "jpg-png", "png-jpg", "grayscale", "invert"],
+    },
     "jpg-png": {
       steps: ["JPGまたはJPEG画像を選択します。", "標準PNGまたは透過PNGを選びます。", "プレビューを確認してPNGを保存します。"],
       practical: [

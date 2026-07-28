@@ -1,6 +1,6 @@
 import { languageAlternates, localePath, locales, siteUrl } from "@/lib/i18n";
 
-const paths = ["", "/invert-image", "/grayscale-image", "/jpg-to-png", "/png-to-jpg", "/resize-image", "/about", "/privacy", "/terms"];
+const paths = ["", "/invert-image", "/grayscale-image", "/jpg-to-png", "/png-to-jpg", "/resize-image", "/compress-image", "/about", "/privacy", "/terms"];
 
 function alternateLinks(path:string){
   return Object.entries(languageAlternates(path||"/")).map(([language,href])=>

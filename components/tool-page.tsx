@@ -1,4 +1,5 @@
 import { ImageTool, type ToolConfig } from "./image-tool";
+import { CompressImageTool } from "./compress-image-tool";
 import { Footer, Header } from "./site-shell";
 import { AdPlaceholder } from "./ad-placeholder";
 import { ToolSeoContent } from "./tool-seo-content";
@@ -45,7 +46,7 @@ export function ToolPage({ config }: { config: ToolConfig }) {
     <>
       <Header locale={config.locale} messages={config.messages} />
       <main className="wrap tool-main">
-        <ImageTool config={config} />
+        {config.kind === "compress" ? <CompressImageTool config={config} /> : <ImageTool config={config} />}
         <AdPlaceholder label={config.messages.nav.advertisement} />
         <ToolSeoContent config={config} content={seoContent} />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData).replace(/</g, "\\u003c") }} />
