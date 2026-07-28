@@ -2,13 +2,71 @@ import type { Locale } from "@/lib/i18n";
 import type { ToolKind } from "@/components/image-tool";
 
 export type ToolSeoContent = {
+  useCases: string[];
+  faqLead: { question: string; answer: string };
   steps: string[];
   practical: { heading: string; body: string }[];
   extraFaqs: { question: string; answer: string }[];
   related: ToolKind[];
 };
 
-const content: Record<Locale, Record<ToolKind, ToolSeoContent>> = {
+type ToolSeoContentCore = Omit<ToolSeoContent, "useCases" | "faqLead">;
+
+const useCases: Record<Locale, Record<ToolKind, string[]>> = {
+  en: {
+    compress: ["Meet a website or online form upload limit.", "Reduce a photo before attaching it to an email.", "Prepare image files for an online application.", "Make high-resolution smartphone photos easier to share.", "Save storage space while keeping practical visual quality.", "Match a specific KB or MB file-size requirement."],
+    "jpg-png": ["Keep logos, text, and graphic edges clear in a PNG file.", "Prepare an image for transparent-background editing.", "Avoid another round of JPG compression during later edits.", "Create PNG assets for a design or interface project.", "Convert an image before intentionally removing a light background."],
+    "png-jpg": ["Reduce the size of photographic images used on a website.", "Create a file that is easier to upload to common forms.", "Replace transparency with a chosen background for general photo use.", "Prepare a smaller image for an email attachment.", "Help image-heavy pages load faster."],
+    resize: ["Fit an image neatly into a blog post or article.", "Match the pixel dimensions requested by an online marketplace.", "Prepare a profile or account photo.", "Fit an image into a presentation slide.", "Adjust dimensions before printing or placing in a document."],
+    grayscale: ["Inspect contrast without color influencing the result.", "Prepare an image for black-and-white printing.", "Create a restrained monochrome visual style.", "Reduce color distractions while editing a composition.", "Compare lighting and tonal balance more clearly."],
+    invert: ["View photographed or scanned film negatives more easily.", "Improve the readability of some scanned documents.", "Reveal different details in dark or low-contrast images.", "Check contrast while editing graphics.", "Create an intentional inverted-color effect."],
+  },
+  ko: {
+    compress: ["웹사이트나 온라인 양식의 업로드 용량 제한을 맞출 때", "이메일에 첨부하기 전에 사진 용량을 줄일 때", "온라인 지원서에 넣을 이미지 파일을 준비할 때", "고화질 스마트폰 사진을 더 가볍게 공유할 때", "실용적인 화질을 유지하며 저장 공간을 줄일 때", "정해진 KB 또는 MB 용량에 맞춰야 할 때"],
+    "jpg-png": ["로고, 글자, 그래픽 윤곽을 PNG로 선명하게 보관할 때", "투명 배경 편집을 시작하기 전에 이미지를 준비할 때", "반복 편집 과정에서 JPG 재압축을 피하고 싶을 때", "디자인 작업에 사용할 PNG 파일이 필요할 때", "밝은 배경을 제거하기 전에 형식을 변환할 때"],
+    "png-jpg": ["웹사이트에 사용할 사진 이미지의 용량을 줄일 때", "온라인 양식에 더 쉽게 올릴 수 있는 파일이 필요할 때", "투명 영역에 배경색을 넣어 일반 사진처럼 사용할 때", "이메일 첨부용 이미지를 가볍게 준비할 때", "이미지가 많은 페이지의 로딩 부담을 줄일 때"],
+    resize: ["블로그나 게시글에 맞는 이미지 크기를 만들 때", "온라인 판매 페이지의 업로드 규격을 맞출 때", "프로필 사진을 원하는 픽셀 크기로 준비할 때", "프레젠테이션 슬라이드에 이미지를 맞출 때", "인쇄하거나 문서에 넣기 전에 크기를 조정할 때"],
+    grayscale: ["색상의 영향 없이 이미지 명암을 분석할 때", "흑백 인쇄용 이미지를 준비할 때", "차분한 모노크롬 효과를 만들 때", "편집 중 색상으로 인한 시각적 방해를 줄일 때", "조명과 밝기 균형을 더 분명하게 비교할 때"],
+    invert: ["필름 네거티브를 보기 쉬운 색상으로 확인할 때", "스캔 문서의 글자와 배경 구분을 개선해 볼 때", "어둡거나 대비가 낮은 이미지의 다른 디테일을 찾을 때", "그래픽 편집 중 명암 대비를 점검할 때", "의도적인 색상 반전 효과를 만들 때"],
+  },
+  ja: {
+    compress: ["Webサイトやオンラインフォームの容量制限に合わせるとき", "メールに添付する前に写真を軽くしたいとき", "オンライン応募用の画像ファイルを準備するとき", "高画質のスマートフォン写真を共有しやすくするとき", "実用的な画質を保ちながら保存容量を減らすとき", "指定されたKBまたはMBに合わせるとき"],
+    "jpg-png": ["ロゴ、文字、グラフィックの輪郭を鮮明に保存したいとき", "透明背景の編集を始める前に画像を準備するとき", "繰り返し編集でJPGの再圧縮を避けたいとき", "デザイン制作に使うPNG素材が必要なとき", "明るい背景を削除する前に形式を変換するとき"],
+    "png-jpg": ["Webサイト用の写真画像を軽くしたいとき", "一般的なフォームへアップロードしやすくするとき", "透明部分に背景色を入れて通常の写真として使うとき", "メール添付用の画像を小さくしたいとき", "画像の多いページを読み込みやすくしたいとき"],
+    resize: ["ブログ記事に合う画像サイズへ整えるとき", "オンライン販売ページの指定寸法に合わせるとき", "プロフィール画像を必要なピクセル数で準備するとき", "プレゼンテーションのスライドへ画像を収めるとき", "印刷や文書への配置前に寸法を調整するとき"],
+    grayscale: ["色に左右されず画像のコントラストを確認するとき", "白黒印刷用の画像を準備するとき", "落ち着いたモノクロ表現を作るとき", "編集時の色による視覚的な影響を減らすとき", "光と明暗のバランスを比較するとき"],
+    invert: ["撮影またはスキャンしたフィルムネガを見やすくするとき", "スキャン文書の文字を読みやすくできるか確認するとき", "暗い画像や低コントラスト画像の別の細部を見るとき", "グラフィック編集でコントラストを点検するとき", "意図的な色反転エフェクトを作るとき"],
+  },
+};
+
+const faqLeads: Record<Locale, Record<ToolKind, ToolSeoContent["faqLead"]>> = {
+  en: {
+    compress: { question: "When should I compress an image to a target size?", answer: "Use target-size compression when a form, website, email, or application requires an image below a specific KB or MB limit." },
+    "jpg-png": { question: "When should I convert JPG to PNG?", answer: "Convert to PNG when you need crisp graphic edges, a lossless editing file, or the option to create a transparent background." },
+    "png-jpg": { question: "When should I convert PNG to JPG?", answer: "Convert photographic PNG files to JPG when transparency is not needed and a smaller, widely accepted image file is more useful." },
+    resize: { question: "When should I resize an image instead of compressing it?", answer: "Resize when a page, slide, profile, print layout, or upload form requires specific pixel dimensions." },
+    grayscale: { question: "When is grayscale more useful than color?", answer: "Grayscale helps when checking contrast and lighting, preparing black-and-white printing, or creating a monochrome visual style." },
+    invert: { question: "When should I invert image colors?", answer: "Invert colors to inspect film negatives, test graphic contrast, explore dark-image detail, or create a deliberate negative effect." },
+  },
+  ko: {
+    compress: { question: "목표 용량 이미지 압축은 언제 필요한가요?", answer: "온라인 양식, 웹사이트, 이메일, 지원서에서 특정 KB 또는 MB 이하의 이미지가 필요할 때 사용하세요." },
+    "jpg-png": { question: "JPG를 PNG로 변환해야 하는 경우는 언제인가요?", answer: "그래픽 윤곽을 선명하게 유지하거나 무손실 편집 파일, 투명 배경 작업용 이미지가 필요할 때 적합합니다." },
+    "png-jpg": { question: "PNG를 JPG로 변환해야 하는 경우는 언제인가요?", answer: "투명도가 필요 없는 사진형 PNG를 더 작고 폭넓게 사용할 수 있는 이미지 파일로 만들 때 유용합니다." },
+    resize: { question: "이미지 압축 대신 크기 조절이 필요한 경우는 언제인가요?", answer: "게시글, 슬라이드, 프로필, 인쇄물, 업로드 양식에서 정확한 픽셀 크기를 요구할 때 사용하세요." },
+    grayscale: { question: "컬러보다 흑백 이미지가 유용한 경우는 언제인가요?", answer: "명암과 조명을 확인하거나 흑백 인쇄를 준비할 때, 모노크롬 분위기를 만들 때 유용합니다." },
+    invert: { question: "이미지 색상 반전은 언제 사용하면 좋나요?", answer: "필름 네거티브를 확인하거나 그래픽 대비를 점검할 때, 어두운 이미지의 다른 디테일이나 네거티브 효과를 보고 싶을 때 사용하세요." },
+  },
+  ja: {
+    compress: { question: "画像を目標容量へ圧縮するのはどんなときですか？", answer: "フォーム、Webサイト、メール、応募書類などで指定のKBまたはMB以下にする必要があるときに使います。" },
+    "jpg-png": { question: "JPGをPNGへ変換するのはどんなときですか？", answer: "グラフィックの輪郭を鮮明に保ちたいとき、可逆編集や透明背景の作業用ファイルが必要なときに適しています。" },
+    "png-jpg": { question: "PNGをJPGへ変換するのはどんなときですか？", answer: "透明度が不要な写真系PNGを、より小さく一般的に扱いやすい画像へ変えたいときに便利です。" },
+    resize: { question: "圧縮ではなく画像サイズ変更が必要なのはどんなときですか？", answer: "記事、スライド、プロフィール、印刷物、アップロードフォームで指定ピクセル寸法が必要なときに使います。" },
+    grayscale: { question: "カラーよりグレースケールが役立つのはどんなときですか？", answer: "コントラストや光を確認するとき、白黒印刷の準備、モノクロ表現の作成に役立ちます。" },
+    invert: { question: "画像の色反転はどんなときに使いますか？", answer: "フィルムネガの確認、グラフィックのコントラスト点検、暗い画像の別の細部確認、ネガ効果の作成に使えます。" },
+  },
+};
+
+const content: Record<Locale, Record<ToolKind, ToolSeoContentCore>> = {
   en: {
     compress: {
       steps: ["Upload a large photo or image.", "Choose the target file size.", "Compress and download the result."],
@@ -16,7 +74,7 @@ const content: Record<Locale, Record<ToolKind, ToolSeoContent>> = {
         { heading: "How target-size compression works", body: "JPG and WebP are encoded repeatedly with an adaptive quality search. PixEasy keeps the best practical result at or below the target, and can reduce dimensions proportionally when quality changes alone are not enough." },
         { heading: "Quality and dimensions", body: "Lower quality can reduce photographic detail without changing pixel dimensions. Dimension reduction removes pixels but can achieve much smaller files while preserving the original aspect ratio." },
         { heading: "PNG and transparency", body: "PNG uses lossless compression and can preserve transparency, so its size may not fall as much as JPG or WebP. Format conversion is optional and never happens without your selection." },
-        { heading: "Useful target-size workflows", body: "Target compression is useful for online forms, job application attachments, email, profile photos, and website optimization when a file must fit an upload limit." },
+        { heading: "Why smartphone photos are large", body: "Modern phones capture many megapixels and retain substantial color and detail. That is useful for editing and printing, but often more data than an online form, email, or profile image needs." },
         { heading: "Private browser processing", body: "The source image is decoded and compressed locally in your browser. It is not uploaded, stored, or sent to an external image-processing service." },
       ],
       extraFaqs: [
@@ -98,7 +156,7 @@ const content: Record<Locale, Record<ToolKind, ToolSeoContent>> = {
         { heading: "목표 용량 압축 방식", body: "JPG와 WebP는 적응형 품질 탐색으로 여러 품질을 비교해 목표 이하의 가장 좋은 실용적 결과를 찾습니다. 품질만으로 부족하면 가로세로 비율을 유지하며 픽셀 크기를 줄일 수 있습니다." },
         { heading: "품질과 이미지 크기의 차이", body: "품질을 낮추면 픽셀 크기는 유지하면서 사진의 세부 표현이 줄어듭니다. 픽셀 크기를 줄이면 이미지 자체가 작아지지만 훨씬 작은 파일을 만들 수 있습니다." },
         { heading: "PNG와 투명도", body: "PNG는 무손실 압축과 투명도를 유지할 수 있어 JPG나 WebP만큼 용량이 줄지 않을 수 있습니다. 형식 변환은 사용자가 직접 선택한 경우에만 진행됩니다." },
-        { heading: "목표 용량이 필요한 경우", body: "온라인 양식, 입사 지원 첨부 파일, 이메일, 프로필 사진, 웹사이트 이미지처럼 업로드 가능한 파일 용량을 맞춰야 할 때 유용합니다." },
+        { heading: "스마트폰 사진 용량이 큰 이유", body: "최근 스마트폰은 높은 픽셀 수와 풍부한 색상 정보를 저장합니다. 편집과 인쇄에는 유용하지만 온라인 양식, 이메일, 프로필 이미지에는 필요 이상으로 큰 데이터일 수 있습니다." },
         { heading: "기기에서만 처리", body: "원본 이미지 읽기와 압축은 브라우저에서 이루어집니다. 파일은 업로드되거나 저장되지 않고 외부 이미지 처리 서비스로 전송되지 않습니다." },
       ],
       extraFaqs: [
@@ -180,7 +238,7 @@ const content: Record<Locale, Record<ToolKind, ToolSeoContent>> = {
         { heading: "目標サイズ圧縮の仕組み", body: "JPGとWebPは適応型品質検索で複数の品質を比較し、目標以下で実用的な最良結果を探します。品質だけで足りない場合は縦横比を保って寸法を縮小できます。" },
         { heading: "品質と画像寸法の違い", body: "品質を下げるとピクセル寸法を保ちながら写真の細部が減ります。寸法を縮小するとピクセル数は減りますが、より小さいファイルを作れます。" },
         { heading: "PNGと透明度", body: "PNGは可逆圧縮と透明度を保持できるため、JPGやWebPほど小さくならない場合があります。形式変換はユーザーが明示的に選んだ場合だけ行います。" },
-        { heading: "目標容量が役立つ場面", body: "オンラインフォーム、応募書類、メール添付、プロフィール写真、Webサイト画像など、アップロード容量に合わせたい場合に便利です。" },
+        { heading: "スマートフォン写真が大きい理由", body: "最近のスマートフォンは多くのピクセルと豊富な色情報を保存します。編集や印刷には便利ですが、フォーム、メール、プロフィール画像には必要以上に大きい場合があります。" },
         { heading: "端末内で処理", body: "元画像の読み込みと圧縮はブラウザ内で行われます。ファイルはアップロード、保存、外部画像処理サービスへの送信をされません。" },
       ],
       extraFaqs: [
@@ -258,5 +316,5 @@ const content: Record<Locale, Record<ToolKind, ToolSeoContent>> = {
 };
 
 export function getToolSeoContent(locale: Locale, kind: ToolKind) {
-  return content[locale][kind];
+  return { ...content[locale][kind], useCases: useCases[locale][kind], faqLead: faqLeads[locale][kind] };
 }

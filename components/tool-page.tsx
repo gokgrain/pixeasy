@@ -2,14 +2,14 @@ import { ImageTool, type ToolConfig } from "./image-tool";
 import { CompressImageTool } from "./compress-image-tool";
 import { Footer, Header } from "./site-shell";
 import { AdPlaceholder } from "./ad-placeholder";
-import { ToolSeoContent } from "./tool-seo-content";
+import { ToolSeoContent, visibleToolFaqs } from "./tool-seo-content";
 import { getToolSeoContent } from "@/content/tool-seo";
 import { siteUrl } from "@/lib/i18n";
 
 export function ToolPage({ config }: { config: ToolConfig }) {
   const pageUrl = `${siteUrl}${config.path}`;
   const seoContent = getToolSeoContent(config.locale, config.kind);
-  const faqs = [...config.faqs, ...seoContent.extraFaqs];
+  const faqs = visibleToolFaqs(config, seoContent);
   const structuredData = {
     "@context": "https://schema.org",
     "@graph": [
@@ -47,8 +47,7 @@ export function ToolPage({ config }: { config: ToolConfig }) {
       <Header locale={config.locale} messages={config.messages} />
       <main className="wrap tool-main">
         {config.kind === "compress" ? <CompressImageTool config={config} /> : <ImageTool config={config} />}
-        <AdPlaceholder label={config.messages.nav.advertisement} />
-        <ToolSeoContent config={config} content={seoContent} />
+        <ToolSeoContent config={config} content={seoContent} advertisement={<AdPlaceholder label={config.messages.nav.advertisement} />} />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData).replace(/</g, "\\u003c") }} />
       </main>
       <Footer locale={config.locale} messages={config.messages} />
