@@ -38,7 +38,7 @@ export function Footer({ locale, messages }: { locale: Locale; messages: Message
       <div className="wrap footer-inner">
         <span>© {new Date().getFullYear()} PixEasy. {messages.nav.copyright}</span>
         <nav className="footer-links" aria-label={messages.nav.footer}>
-          <Link href={localePath(locale, "/about")}>{messages.nav.about}</Link><Link href={localePath(locale, "/privacy")}>{messages.nav.privacy}</Link><Link href={localePath(locale, "/terms")}>{messages.nav.terms}</Link><a href="mailto:hello@pixeasy.site">{messages.nav.contact}</a>
+          <Link href={localePath(locale, "/about")}>{messages.nav.about}</Link><Link href={localePath(locale, "/privacy")}>{messages.nav.privacy}</Link><Link href={localePath(locale, "/terms")}>{messages.nav.terms}</Link><a href="mailto:support@pixeasytools.com">{messages.nav.contact}</a>
         </nav>
       </div>
     </footer>
