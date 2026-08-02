@@ -3,6 +3,7 @@ import { AdPlaceholder } from "./ad-placeholder";
 import { Footer, Header } from "./site-shell";
 import { HomeUpload } from "./home-upload";
 import { localePath, type Locale, type Messages } from "@/lib/i18n";
+import { localizedTool, visibleHomeTools } from "@/lib/tool-catalog";
 
 export function HomePage({ locale, messages }: { locale: Locale; messages: Messages }) {
   return (
@@ -24,13 +25,14 @@ export function HomePage({ locale, messages }: { locale: Locale; messages: Messa
             <p>{messages.home.toolsCopy}</p>
           </div>
           <div className="tool-cards">
-            {messages.home.cards.map((card) => (
-              <Link className="tool-card" href={localePath(locale, `/${card.slug}`)} key={card.slug}>
+            {visibleHomeTools().map((tool) => {
+              const card = localizedTool(tool, messages);
+              return <Link className="tool-card" href={localePath(locale, `/${card.slug}`)} key={card.id}>
                 <span className="card-icon" aria-hidden="true">{card.icon}</span>
-                <span><strong>{card.title}</strong><small>{card.copy}</small></span>
+                <span><strong>{card.label}</strong><small>{card.description}</small></span>
                 <span className="arrow" aria-hidden="true">→</span>
-              </Link>
-            ))}
+              </Link>;
+            })}
           </div>
           <div className="home-explanation"><h2>{messages.home.privateHeading}</h2><p>{messages.home.privateCopy}</p></div>
           <AdPlaceholder label={messages.nav.advertisement} />

@@ -2,6 +2,9 @@ export type PendingImageAction =
   | "jpg-png"
   | "png-jpg"
   | "remove-background"
+  | "compress"
+  | "resize"
+  | "transparent-background"
   | "grayscale"
   | "invert";
 

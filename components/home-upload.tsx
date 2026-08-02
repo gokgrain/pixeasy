@@ -6,6 +6,7 @@ import { setPendingImage, type PendingImageAction } from "@/lib/pending-image";
 import { AdPlaceholder } from "./ad-placeholder";
 import { UploadDropzone } from "./upload-dropzone";
 import { localePath, type Locale, type Messages } from "@/lib/i18n";
+import { compatibleUploadTools, localizedTool } from "@/lib/tool-catalog";
 
 export function HomeUpload({ locale, messages }: { locale: Locale; messages: Messages }) {
   const router = useRouter();
@@ -29,24 +30,10 @@ export function HomeUpload({ locale, messages }: { locale: Locale; messages: Mes
     return () => window.clearTimeout(timer);
   }, [file]);
 
-  const conversion = file?.type === "image/jpeg"
-      ? { label: "JPG → PNG", action: "jpg-png" as const, href: localePath(locale, "/jpg-to-png") }
-    : file?.type === "image/png"
-      ? { label: "PNG → JPG", action: "png-jpg" as const, href: localePath(locale, "/png-to-jpg") }
-      : null;
-
-  const actions: { label: string; description?: string; icon: string; action: PendingImageAction; href: string }[] = [
-    ...(conversion ? [{ ...conversion, icon: "↗" }] : []),
-    ...(file?.type === "image/jpeg" ? [{
-      label: messages.upload.removeBackground,
-      description: messages.upload.transparentPng,
-      icon: "◫",
-      action: "remove-background" as const,
-      href: localePath(locale, "/jpg-to-png"),
-    }] : []),
-    { label: messages.upload.grayscale, icon: "◐", action: "grayscale", href: localePath(locale, "/grayscale-image") },
-    { label: messages.upload.invert, icon: "◑", action: "invert", href: localePath(locale, "/invert-image") },
-  ];
+  const actions = file ? compatibleUploadTools(file.type).map((tool) => {
+    const item = localizedTool(tool, messages);
+    return { ...item, href:localePath(locale, `/${item.slug}`) };
+  }) : [];
 
   function openTool(action: PendingImageAction, href: string) {
     if (!file) return;
@@ -69,9 +56,9 @@ export function HomeUpload({ locale, messages }: { locale: Locale; messages: Mes
             </div>
             <div className="action-grid">
               {actions.map((item) => (
-                <button type="button" key={item.action} onClick={() => openTool(item.action, item.href)}>
+                <button type="button" key={item.action} data-tool-id={item.id} data-tool-href={item.href} onClick={() => openTool(item.action, item.href)}>
                   <span aria-hidden="true">{item.icon}</span>
-                  <span><strong>{item.label}</strong>{item.description && <small>{item.description}</small>}</span>
+                  <span><strong>{item.label}</strong><small>{item.description}</small></span>
                 </button>
               ))}
             </div>

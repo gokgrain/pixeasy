@@ -9,6 +9,7 @@ import {
   presetTargetBytes, reductionPercent, targetBytes, type CompressFormat, type TargetUnit,
 } from "@/lib/compress-image";
 import type { ToolConfig } from "./image-tool";
+import { takePendingImage } from "@/lib/pending-image";
 
 const copy = {
   en: {
@@ -67,6 +68,7 @@ function emit(name: string, detail?: Record<string, string | number | boolean>) 
 
 export function CompressImageTool({ config }: { config: ToolConfig }) {
   const t = copy[config.locale];
+  const [pendingImage] = useState(() => takePendingImage());
   const [file,setFile] = useState<File|null>(null);
   const [loaded,setLoaded] = useState<LoadedImage|null>(null);
   const [originalUrl,setOriginalUrl] = useState("");
@@ -106,6 +108,14 @@ export function CompressImageTool({ config }: { config: ToolConfig }) {
     } catch { setError(config.messages.toolUi.decodeError); emit("compress_image_error"); }
     finally { setProgress(""); }
   }
+
+  useEffect(() => {
+    if (!pendingImage) return;
+    const timer = window.setTimeout(() => { void chooseFile(pendingImage.file); }, 0);
+    return () => window.clearTimeout(timer);
+    // The pending image is consumed once when this tool opens.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pendingImage]);
 
   const originalFormat = file ? formatFromMime(file.type) : null;
   const selectedTarget = preset === "custom" ? targetBytes(customValue, unit) : file ? presetTargetBytes(preset, file.size) : null;
