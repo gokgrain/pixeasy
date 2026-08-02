@@ -9,7 +9,7 @@ import type { PixelMode } from "@/lib/pixels";
 import { takePendingImage, type PendingImageAction } from "@/lib/pending-image";
 import type { Locale, Messages } from "@/lib/i18n";
 
-export type ToolKind = "invert" | "grayscale" | "jpg-png" | "png-jpg" | "resize" | "compress";
+export type ToolKind = "invert" | "grayscale" | "jpg-png" | "png-jpg" | "resize" | "compress" | "transparent-background";
 export type ToolConfig = {
   kind: ToolKind;
   locale: Locale;

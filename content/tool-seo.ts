@@ -11,8 +11,9 @@ export type ToolSeoContent = {
 };
 
 type ToolSeoContentCore = Omit<ToolSeoContent, "useCases" | "faqLead">;
+type LegacyToolKind = Exclude<ToolKind, "transparent-background">;
 
-const useCases: Record<Locale, Record<ToolKind, string[]>> = {
+const useCases: Record<Locale, Record<LegacyToolKind, string[]>> = {
   en: {
     compress: ["Meet a website or online form upload limit.", "Reduce a photo before attaching it to an email.", "Prepare image files for an online application.", "Make high-resolution smartphone photos easier to share.", "Save storage space while keeping practical visual quality.", "Match a specific KB or MB file-size requirement."],
     "jpg-png": ["Keep logos, text, and graphic edges clear in a PNG file.", "Prepare an image for transparent-background editing.", "Avoid another round of JPG compression during later edits.", "Create PNG assets for a design or interface project.", "Convert an image before intentionally removing a light background."],
@@ -39,7 +40,7 @@ const useCases: Record<Locale, Record<ToolKind, string[]>> = {
   },
 };
 
-const faqLeads: Record<Locale, Record<ToolKind, ToolSeoContent["faqLead"]>> = {
+const faqLeads: Record<Locale, Record<LegacyToolKind, ToolSeoContent["faqLead"]>> = {
   en: {
     compress: { question: "When should I compress an image to a target size?", answer: "Use target-size compression when a form, website, email, or application requires an image below a specific KB or MB limit." },
     "jpg-png": { question: "When should I convert JPG to PNG?", answer: "Convert to PNG when you need crisp graphic edges, a lossless editing file, or the option to create a transparent background." },
@@ -66,7 +67,7 @@ const faqLeads: Record<Locale, Record<ToolKind, ToolSeoContent["faqLead"]>> = {
   },
 };
 
-const content: Record<Locale, Record<ToolKind, ToolSeoContentCore>> = {
+const content: Record<Locale, Record<LegacyToolKind, ToolSeoContentCore>> = {
   en: {
     compress: {
       steps: ["Upload a large photo or image.", "Choose the target file size.", "Compress and download the result."],
@@ -315,6 +316,46 @@ const content: Record<Locale, Record<ToolKind, ToolSeoContentCore>> = {
   },
 };
 
+const transparentContent: Record<Locale, ToolSeoContent> = {
+  en: {
+    useCases: ["Make a logo background transparent.", "Prepare a product image with a plain backdrop.", "Remove a scanned signature's white background.", "Turn a flat-color graphic into a reusable PNG."],
+    faqLead: { question: "When should I use a solid-color transparency tool?", answer: "Use it when the background is white, black, or another mostly uniform color. It is not designed to recognize people or complex scenes." },
+    steps: ["Upload a JPG, PNG, or WebP image.", "Choose or sample the background color, then adjust tolerance and edge softness.", "Run the tool, review the checkerboard preview, and download the transparent PNG."],
+    practical: [
+      { heading: "Solid colors, not AI recognition", body: "This tool compares pixel colors. It does not identify a subject, hair, people, products, or complex scenery." },
+      { heading: "Tolerance and edge softness", body: "Tolerance includes colors farther from the selected background. Edge softness gradually reduces alpha near the boundary for a less jagged result." },
+      { heading: "Protecting colors inside the subject", body: "Keep the edge-connected option on when the background reaches the image edges. Matching colors enclosed inside the subject will usually remain opaque." },
+    ],
+    extraFaqs: [{ question: "Why do some halos remain?", answer: "Compressed JPG edges can contain blended colors. Increase tolerance or edge softness gradually while checking the result." }],
+    related: ["jpg-png", "png-jpg", "resize"],
+  },
+  ko: {
+    useCases: ["로고의 단색 배경을 투명하게 만들 때", "단색 촬영 배경의 상품 이미지를 준비할 때", "스캔한 서명의 흰 배경을 지울 때", "단색 그래픽을 재사용 가능한 PNG로 만들 때"],
+    faqLead: { question: "단색 배경 투명화 도구는 언제 사용하나요?", answer: "배경이 흰색, 검정색 또는 비교적 균일한 단색일 때 적합합니다. 사람이나 복잡한 장면을 인식하는 기능은 아닙니다." },
+    steps: ["JPG, PNG 또는 WebP 이미지를 선택합니다.", "배경색을 선택하거나 추출하고 허용 범위와 가장자리 부드러움을 조절합니다.", "실행 후 체크보드 미리보기를 확인하고 투명 PNG를 다운로드합니다."],
+    practical: [
+      { heading: "AI 인식이 아닌 단색 비교", body: "선택한 색상과 픽셀을 비교하는 도구입니다. 사람, 머리카락, 사물 또는 복잡한 풍경을 자동 인식하지 않습니다." },
+      { heading: "허용 범위와 가장자리", body: "허용 범위를 높이면 선택 색상과 더 차이 나는 픽셀도 포함됩니다. 부드러움은 경계의 알파 값을 점진적으로 줄입니다." },
+      { heading: "피사체 내부 색상 보호", body: "배경이 이미지 가장자리까지 이어진다면 모서리 연결 옵션을 켜세요. 피사체 안에 갇힌 같은 색상은 대부분 유지됩니다." },
+    ],
+    extraFaqs: [{ question: "가장자리에 테두리가 남는 이유는 무엇인가요?", answer: "JPG 압축 경계에는 배경과 피사체 색상이 섞일 수 있습니다. 결과를 보며 허용 범위나 부드러움을 조금씩 높이세요." }],
+    related: ["jpg-png", "png-jpg", "resize"],
+  },
+  ja: {
+    useCases: ["ロゴの単色背景を透明にするとき", "無地背景の商品画像を準備するとき", "スキャンした署名の白背景を消すとき", "単色グラフィックを再利用できるPNGにするとき"],
+    faqLead: { question: "単色背景の透明化はどんな画像に向いていますか？", answer: "背景が白、黒、または比較的均一な単色の場合に適しています。人物や複雑な場面を認識する機能ではありません。" },
+    steps: ["JPG、PNG、WebP画像を選択します。", "背景色を選択または抽出し、許容範囲とエッジの柔らかさを調整します。", "実行後に市松模様のプレビューを確認し、透過PNGを保存します。"],
+    practical: [
+      { heading: "AI認識ではなく色の比較", body: "選択色と各ピクセルを比較するツールです。人物、髪、物体、複雑な風景は自動認識しません。" },
+      { heading: "許容範囲とエッジ", body: "許容範囲を上げると選択色から離れた色も対象になります。柔らかさは境界のアルファを段階的に減らします。" },
+      { heading: "被写体内の同色を保護", body: "背景が画像端につながっている場合は接続領域オプションをオンにします。被写体内部に囲まれた同色は多くの場合残ります。" },
+    ],
+    extraFaqs: [{ question: "輪郭に色が残るのはなぜですか？", answer: "JPGの圧縮境界には背景色と被写体色が混ざる場合があります。結果を見ながら許容範囲や柔らかさを少しずつ上げてください。" }],
+    related: ["jpg-png", "png-jpg", "resize"],
+  },
+};
+
 export function getToolSeoContent(locale: Locale, kind: ToolKind) {
+  if (kind === "transparent-background") return transparentContent[locale];
   return { ...content[locale][kind], useCases: useCases[locale][kind], faqLead: faqLeads[locale][kind] };
 }

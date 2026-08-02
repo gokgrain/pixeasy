@@ -1,5 +1,6 @@
 import { ImageTool, type ToolConfig } from "./image-tool";
 import { CompressImageTool } from "./compress-image-tool";
+import { BackgroundTransparentTool } from "./background-transparent-tool";
 import { Footer, Header } from "./site-shell";
 import { AdPlaceholder } from "./ad-placeholder";
 import { ToolSeoContent, visibleToolFaqs } from "./tool-seo-content";
@@ -46,8 +47,9 @@ export function ToolPage({ config }: { config: ToolConfig }) {
     <>
       <Header locale={config.locale} messages={config.messages} />
       <main className="wrap tool-main">
-        {config.kind === "compress" ? <CompressImageTool config={config} /> : <ImageTool config={config} />}
-        <ToolSeoContent config={config} content={seoContent} advertisement={<AdPlaceholder label={config.messages.nav.advertisement} />} />
+        {config.kind === "compress" ? <CompressImageTool config={config} /> : config.kind === "transparent-background" ? <BackgroundTransparentTool config={config} /> : <ImageTool config={config} />}
+        {config.kind === "transparent-background" && <AdPlaceholder label={config.messages.nav.advertisement} />}
+        <ToolSeoContent config={config} content={seoContent} advertisement={config.kind === "transparent-background" ? undefined : <AdPlaceholder label={config.messages.nav.advertisement} />} />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData).replace(/</g, "\\u003c") }} />
       </main>
       <Footer locale={config.locale} messages={config.messages} />
