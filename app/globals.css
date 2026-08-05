@@ -30,10 +30,11 @@ button { cursor:pointer; }
 .eyebrow { color:var(--orange-dark); font-size:.73rem; text-transform:uppercase; letter-spacing:.16em; font-weight:800; margin:0 0 20px; }
 h1,h2,h3,p { margin-top:0; }
 .hero>.eyebrow,.hero>h1,.hero>.hero-subtitle { overflow:hidden; opacity:1; max-height:120px; transition:opacity 280ms ease,max-height 300ms ease,margin 300ms ease; }
-.hero h1 { margin-bottom:18px; font-size:clamp(2.9rem,8vw,5.4rem); letter-spacing:-.068em; line-height:.96; }
+.hero>h1 { overflow:visible; max-height:150px; padding-bottom:.12em; }
+.hero h1 { margin-bottom:18px; font-size:clamp(2.9rem,8vw,5.4rem); letter-spacing:-.068em; line-height:1.06; }
 .hero-subtitle { color:var(--muted); font-size:clamp(1.08rem,3vw,1.34rem); margin-bottom:46px; }
 .hero:has(.home-upload.has-image) { min-height:0; padding:20px 16px 34px; background:none; }
-.hero:has(.home-upload.has-image)>.eyebrow,.hero:has(.home-upload.has-image)>h1,.hero:has(.home-upload.has-image)>.hero-subtitle { opacity:0; max-height:0; margin:0; pointer-events:none; }
+.hero:has(.home-upload.has-image)>.eyebrow,.hero:has(.home-upload.has-image)>h1,.hero:has(.home-upload.has-image)>.hero-subtitle { overflow:hidden; opacity:0; max-height:0; margin:0; padding-bottom:0; pointer-events:none; }
 .upload-zone { display:block; width:min(760px,100%); min-height:260px; margin:0 auto; padding:42px 34px 32px; border:1.5px dashed #c8c7c4; border-radius:22px; background:rgba(255,255,255,.96); box-shadow:0 18px 55px rgba(32,27,23,.065); transition:border-color 180ms ease,background-color 180ms ease,box-shadow 180ms ease,transform 180ms ease; position:relative; }
 .upload-zone:hover { border-color:#ffb27b; background:#fffdfb; box-shadow:0 22px 65px rgba(40,31,23,.09); transform:translateY(-2px); }
 .upload-zone.dragging { border-color:var(--orange); background:#fff8f2; box-shadow:0 0 0 4px rgba(255,134,44,.11),0 22px 65px rgba(40,31,23,.09); transform:translateY(-2px); }
