@@ -15,26 +15,26 @@ type LegacyToolKind = Exclude<ToolKind, "transparent-background">;
 
 const useCases: Record<Locale, Record<LegacyToolKind, string[]>> = {
   en: {
-    compress: ["Meet a website or online form upload limit.", "Reduce a photo before attaching it to an email.", "Prepare image files for an online application.", "Make high-resolution smartphone photos easier to share.", "Save storage space while keeping practical visual quality.", "Match a specific KB or MB file-size requirement."],
+    compress: ["Keep practical visual quality while reducing the original file size.", "Compress an image toward 500 KB, 1 MB, or another target.", "Meet a website or online submission upload limit.", "Reduce a photo before attaching it to an email.", "Prepare image files for an online application.", "Make high-resolution smartphone photos easier to share."],
     "jpg-png": ["Keep logos, text, and graphic edges clear in a PNG file.", "Prepare an image for transparent-background editing.", "Avoid another round of JPG compression during later edits.", "Create PNG assets for a design or interface project.", "Convert an image before intentionally removing a light background."],
     "png-jpg": ["Reduce the size of photographic images used on a website.", "Create a file that is easier to upload to common forms.", "Replace transparency with a chosen background for general photo use.", "Prepare a smaller image for an email attachment.", "Help image-heavy pages load faster."],
-    resize: ["Fit an image neatly into a blog post or article.", "Match the pixel dimensions requested by an online marketplace.", "Prepare a profile or account photo.", "Fit an image into a presentation slide.", "Adjust dimensions before printing or placing in a document."],
+    resize: ["Change an image to exact width and height pixels.", "Match an online submission or marketplace image specification.", "Prepare a profile or account photo.", "Fit an image neatly into a blog post or article.", "Fit an image into a presentation slide or document."],
     grayscale: ["Inspect contrast without color influencing the result.", "Prepare an image for black-and-white printing.", "Create a restrained monochrome visual style.", "Reduce color distractions while editing a composition.", "Compare lighting and tonal balance more clearly."],
     invert: ["View photographed or scanned film negatives more easily.", "Improve the readability of some scanned documents.", "Reveal different details in dark or low-contrast images.", "Check contrast while editing graphics.", "Create an intentional inverted-color effect."],
   },
   ko: {
-    compress: ["웹사이트나 온라인 양식의 업로드 용량 제한을 맞출 때", "이메일에 첨부하기 전에 사진 용량을 줄일 때", "온라인 지원서에 넣을 이미지 파일을 준비할 때", "고화질 스마트폰 사진을 더 가볍게 공유할 때", "실용적인 화질을 유지하며 저장 공간을 줄일 때", "정해진 KB 또는 MB 용량에 맞춰야 할 때"],
+    compress: ["원본 화질을 실용적으로 유지하며 이미지 용량을 줄일 때", "이미지를 500KB, 1MB 등 목표 용량에 맞출 때", "웹사이트나 온라인 제출 양식의 업로드 제한을 맞출 때", "이메일 첨부용 사진 용량을 줄일 때", "온라인 지원서에 넣을 이미지 파일을 준비할 때", "고화질 스마트폰 사진을 더 가볍게 공유할 때"],
     "jpg-png": ["로고, 글자, 그래픽 윤곽을 PNG로 선명하게 보관할 때", "투명 배경 편집을 시작하기 전에 이미지를 준비할 때", "반복 편집 과정에서 JPG 재압축을 피하고 싶을 때", "디자인 작업에 사용할 PNG 파일이 필요할 때", "밝은 배경을 제거하기 전에 형식을 변환할 때"],
     "png-jpg": ["웹사이트에 사용할 사진 이미지의 용량을 줄일 때", "온라인 양식에 더 쉽게 올릴 수 있는 파일이 필요할 때", "투명 영역에 배경색을 넣어 일반 사진처럼 사용할 때", "이메일 첨부용 이미지를 가볍게 준비할 때", "이미지가 많은 페이지의 로딩 부담을 줄일 때"],
-    resize: ["블로그나 게시글에 맞는 이미지 크기를 만들 때", "온라인 판매 페이지의 업로드 규격을 맞출 때", "프로필 사진을 원하는 픽셀 크기로 준비할 때", "프레젠테이션 슬라이드에 이미지를 맞출 때", "인쇄하거나 문서에 넣기 전에 크기를 조정할 때"],
+    resize: ["이미지의 가로·세로 픽셀을 정확하게 변경할 때", "온라인 제출용 이미지 규격이나 쇼핑몰 업로드 크기를 맞출 때", "프로필 사진을 원하는 픽셀 크기로 준비할 때", "블로그나 게시글에 맞는 이미지 크기를 만들 때", "프레젠테이션이나 문서에 넣기 전에 크기를 조정할 때"],
     grayscale: ["색상의 영향 없이 이미지 명암을 분석할 때", "흑백 인쇄용 이미지를 준비할 때", "차분한 모노크롬 효과를 만들 때", "편집 중 색상으로 인한 시각적 방해를 줄일 때", "조명과 밝기 균형을 더 분명하게 비교할 때"],
     invert: ["필름 네거티브를 보기 쉬운 색상으로 확인할 때", "스캔 문서의 글자와 배경 구분을 개선해 볼 때", "어둡거나 대비가 낮은 이미지의 다른 디테일을 찾을 때", "그래픽 편집 중 명암 대비를 점검할 때", "의도적인 색상 반전 효과를 만들 때"],
   },
   ja: {
-    compress: ["Webサイトやオンラインフォームの容量制限に合わせるとき", "メールに添付する前に写真を軽くしたいとき", "オンライン応募用の画像ファイルを準備するとき", "高画質のスマートフォン写真を共有しやすくするとき", "実用的な画質を保ちながら保存容量を減らすとき", "指定されたKBまたはMBに合わせるとき"],
+    compress: ["実用的な画質を保ちながら元画像の容量を減らすとき", "画像を500KB、1MBなどの目標容量に合わせるとき", "Webサイトやオンライン提出フォームの容量制限に合わせるとき", "メールに添付する前に写真を軽くしたいとき", "オンライン応募用の画像ファイルを準備するとき", "高画質のスマートフォン写真を共有しやすくするとき"],
     "jpg-png": ["ロゴ、文字、グラフィックの輪郭を鮮明に保存したいとき", "透明背景の編集を始める前に画像を準備するとき", "繰り返し編集でJPGの再圧縮を避けたいとき", "デザイン制作に使うPNG素材が必要なとき", "明るい背景を削除する前に形式を変換するとき"],
     "png-jpg": ["Webサイト用の写真画像を軽くしたいとき", "一般的なフォームへアップロードしやすくするとき", "透明部分に背景色を入れて通常の写真として使うとき", "メール添付用の画像を小さくしたいとき", "画像の多いページを読み込みやすくしたいとき"],
-    resize: ["ブログ記事に合う画像サイズへ整えるとき", "オンライン販売ページの指定寸法に合わせるとき", "プロフィール画像を必要なピクセル数で準備するとき", "プレゼンテーションのスライドへ画像を収めるとき", "印刷や文書への配置前に寸法を調整するとき"],
+    resize: ["画像の幅・高さを正確なピクセル数へ変更するとき", "オンライン提出や販売ページの画像規格に合わせるとき", "プロフィール画像を必要なピクセル数で準備するとき", "ブログ記事に合う画像サイズへ整えるとき", "プレゼンテーションや文書への配置前に寸法を調整するとき"],
     grayscale: ["色に左右されず画像のコントラストを確認するとき", "白黒印刷用の画像を準備するとき", "落ち着いたモノクロ表現を作るとき", "編集時の色による視覚的な影響を減らすとき", "光と明暗のバランスを比較するとき"],
     invert: ["撮影またはスキャンしたフィルムネガを見やすくするとき", "スキャン文書の文字を読みやすくできるか確認するとき", "暗い画像や低コントラスト画像の別の細部を見るとき", "グラフィック編集でコントラストを点検するとき", "意図的な色反転エフェクトを作るとき"],
   },
