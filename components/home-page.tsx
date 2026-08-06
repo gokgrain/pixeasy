@@ -29,8 +29,7 @@ export function HomePage({ locale, messages }: { locale: Locale; messages: Messa
               const card = localizedTool(tool, messages);
               return <Link className="tool-card" href={localePath(locale, `/${card.slug}`)} key={card.id}>
                 <span className="card-icon" aria-hidden="true">{card.icon}</span>
-                <span><strong>{card.label}</strong><small>{card.description}</small></span>
-                <span className="arrow" aria-hidden="true">→</span>
+                <strong>{card.label}</strong>
               </Link>;
             })}
           </div>

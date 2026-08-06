@@ -80,14 +80,10 @@ h1,h2,h3,p { margin-top:0; }
 .section-heading h2 { font-size:clamp(1.75rem,4vw,2.5rem); letter-spacing:-.045em; margin:0; }
 .section-heading>p { color:var(--muted); max-width:330px; margin:0; }
 .tool-cards { display:grid; grid-template-columns:repeat(4,1fr); gap:18px; }
-.tool-card { min-height:205px; border:1px solid rgba(24,24,24,.075); border-radius:18px; padding:28px; display:grid; grid-template-columns:1fr auto; grid-template-rows:auto 1fr; gap:24px 14px; align-items:start; background:linear-gradient(180deg,#fff 0%,#fffdfb 100%); box-shadow:0 10px 30px rgba(20,20,20,.045); cursor:pointer; transition:transform 180ms ease,box-shadow 180ms ease,border-color 180ms ease; }
+.tool-card { min-height:104px; border:1px solid rgba(24,24,24,.075); border-radius:18px; padding:20px 22px; display:flex; align-items:center; gap:16px; background:linear-gradient(180deg,#fff 0%,#fffdfb 100%); box-shadow:0 10px 30px rgba(20,20,20,.045); cursor:pointer; transition:transform 180ms ease,box-shadow 180ms ease,border-color 180ms ease; }
 .tool-card:hover { transform:translateY(-5px); border-color:#ffd0ae; box-shadow:0 18px 44px rgba(35,26,20,.09); }
 .card-icon { width:52px; height:52px; display:grid; place-items:center; border-radius:15px; background:#fff1e7; font-size:1.55rem; }
-.tool-card>span:nth-child(2) { grid-column:1 / -1; align-self:end; }
-.tool-card strong,.tool-card small { display:block; }
-.tool-card strong { font-size:1.08rem; letter-spacing:-.015em; }
-.tool-card small { color:var(--muted); line-height:1.5; margin-top:7px; }
-.arrow { grid-column:2; grid-row:1; color:var(--orange-dark); font-size:1.25rem; padding-top:12px; }
+.tool-card strong { font-size:1.02rem; line-height:1.35; letter-spacing:-.015em; }
 .home-explanation { max-width:680px; margin:68px auto 0; text-align:center; }
 .home-explanation h2 { margin-bottom:12px; font-size:clamp(1.4rem,3vw,1.8rem); letter-spacing:-.035em; }
 .home-explanation p { margin:0; color:var(--muted); line-height:1.7; }
@@ -278,7 +274,7 @@ h1,h2,h3,p { margin-top:0; }
   .trust-row { gap:8px; margin-top:27px; }
   .trust-row>span { padding:7px 9px; font-size:.75rem; }
   .home-tools { padding:70px 0 58px; }
-  .tool-card { min-height:170px; padding:23px; }
+  .tool-card { min-height:84px; padding:16px 18px; }
   .tool-cards { grid-template-columns:1fr; }
   .preview-grid { grid-template-columns:1fr; gap:10px; }
   .preview-grid::before { content:"↑"; grid-column:1; grid-row:2; }
