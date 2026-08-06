@@ -1,8 +1,10 @@
 import type { Metadata, Viewport } from "next";
+import Script from "next/script";
 import { getMessages, siteUrl, type Locale } from "@/lib/i18n";
 
 const title = "PixEasy — Free Online Image Tools";
 const description = "Free image tools for PNG, JPG, resize, grayscale, and invert colors.";
+const googleAnalyticsId = "G-ZWYP43FQK2";
 
 export const rootMetadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -32,5 +34,16 @@ export function RootDocument({ locale, children }: { locale: Locale; children: R
     {"@type":"Organization","@id":`${siteUrl}/#organization`,name:"PixEasy",url:`${siteUrl}/`,logo:`${siteUrl}/apple-touch-icon.png`},
     {"@type":"SoftwareApplication","@id":`${localizedUrl}#software`,name:"PixEasy",url:localizedUrl,description:messages.home.description,inLanguage:locale,applicationCategory:"MultimediaApplication",operatingSystem:"Any",isAccessibleForFree:true,offers:{"@type":"Offer",price:"0",priceCurrency:"USD"}}
   ]};
-  return <html lang={locale}><body>{children}<script type="application/ld+json" dangerouslySetInnerHTML={{__html:JSON.stringify(structuredData).replace(/</g,"\\u003c")}}/></body></html>;
+  return <html lang={locale}>
+    <body>
+      <Script src={`https://www.googletagmanager.com/gtag/js?id=${googleAnalyticsId}`} strategy="afterInteractive" />
+      <Script id="google-analytics" strategy="afterInteractive">{`
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', '${googleAnalyticsId}');
+      `}</Script>
+      {children}<script type="application/ld+json" dangerouslySetInnerHTML={{__html:JSON.stringify(structuredData).replace(/</g,"\\u003c")}}/>
+    </body>
+  </html>;
 }
