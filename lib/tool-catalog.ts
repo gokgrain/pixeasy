@@ -19,6 +19,13 @@ export type ToolCatalogItem = {
   displayOrder: number;
 };
 
+export type UtilityCatalogItem = {
+  id:"image-size-calculator";
+  icon:string;
+  homeCardVisible:true;
+  displayOrder:number;
+};
+
 const allImages = [imageMimeTypes.jpeg, imageMimeTypes.png, imageMimeTypes.webp] as const;
 
 export const toolCatalog: readonly ToolCatalogItem[] = [
@@ -31,8 +38,12 @@ export const toolCatalog: readonly ToolCatalogItem[] = [
   { id:"grayscale", action:"grayscale", icon:"◐", supportedInputMimeTypes:allImages, outputType:"PNG, JPG", homeCardVisible:true, uploadActionVisible:true, displayOrder:7 },
 ] as const;
 
+export const utilityToolCatalog: readonly UtilityCatalogItem[] = [
+  {id:"image-size-calculator",icon:"⌗",homeCardVisible:true,displayOrder:8},
+] as const;
+
 export function visibleHomeTools() {
-  return toolCatalog.filter((tool) => tool.homeCardVisible).sort((a,b) => a.displayOrder-b.displayOrder);
+  return [...toolCatalog.filter((tool) => tool.homeCardVisible),...utilityToolCatalog].sort((a,b) => a.displayOrder-b.displayOrder);
 }
 
 export function compatibleUploadTools(mimeType: string) {
