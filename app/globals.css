@@ -204,6 +204,7 @@ h1,h2,h3,p { margin-top:0; }
 .calculator-preset-select select { width:100%; min-height:46px; border:1px solid #d9d8d5; border-radius:11px; padding:10px 12px; background:#fff; color:var(--ink); font:inherit; font-size:.9rem; outline:none; }
 .calculator-preset-select select:focus { border-color:var(--orange); box-shadow:0 0 0 3px rgba(255,127,38,.13); }
 .calculator-input-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; margin-top:24px; padding-top:22px; border-top:1px solid var(--line); }
+.calculator-input-grid label:first-child { grid-column:1 / -1; }
 .calculator-input-grid label,.bleed-difference-inputs label { display:grid; gap:7px; color:#47494e; font-size:.78rem; font-weight:750; }
 .calculator-input-grid input,.calculator-input-grid select,.bleed-difference-inputs input { width:100%; min-height:46px; border:1px solid #d9d8d5; border-radius:11px; padding:10px 12px; background:#fff; color:var(--ink); font:inherit; font-size:.9rem; outline:none; }
 .calculator-input-grid input:focus,.calculator-input-grid select:focus,.bleed-difference-inputs input:focus { border-color:var(--orange); box-shadow:0 0 0 3px rgba(255,127,38,.13); }
