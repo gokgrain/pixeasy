@@ -5,7 +5,7 @@ import { compatibleUploadTools, imageMimeTypes, toolCatalog, visibleHomeTools } 
 const ids = (items) => items.map((item) => item.id);
 
 test("home catalog exposes every released tool in display order", () => {
-  assert.deepEqual(ids(visibleHomeTools()), ["compress","resize","jpg-png","png-jpg","transparent-background","invert","grayscale"]);
+  assert.deepEqual(ids(visibleHomeTools()), ["compress","resize","jpg-png","png-jpg","transparent-background","invert","grayscale","image-size-calculator"]);
   assert.equal(toolCatalog.length, 7);
 });
 

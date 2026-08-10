@@ -17,7 +17,7 @@ export function LanguageSwitcher({ locale, messages }: { locale: Locale; message
   const pathname = usePathname();
   return (
     <details className="language-switcher">
-      <summary aria-label={messages.nav.language}>
+      <summary aria-label={`${messages.nav.language}: ${localeLabels[locale]}`}>
         <span aria-hidden="true">🌐</span>
         <span>{localeLabels[locale]}</span>
       </summary>
