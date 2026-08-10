@@ -3,6 +3,7 @@ import type { ToolConfig, ToolKind } from "@/components/image-tool";
 import en from "@/messages/en.json";
 import ko from "@/messages/ko.json";
 import ja from "@/messages/ja.json";
+import { calculatorContent } from "@/content/image-size-calculator";
 
 export const siteUrl = "https://pixeasytools.com";
 export const locales = ["en", "ko", "ja"] as const;
@@ -87,6 +88,11 @@ export function getToolConfig(locale: Locale, kind: ToolKind): ToolConfig {
 export function toolMetadata(locale: Locale, kind: ToolKind): Metadata {
   const item = getMessages(locale).tools[kind];
   return localizedMetadata(locale, `/${item.slug}`, item.seoTitle, item.seoDescription, item.keywords);
+}
+
+export function calculatorMetadata(locale: Locale): Metadata {
+  const item=calculatorContent[locale];
+  return localizedMetadata(locale,"/image-size-calculator",item.seoTitle,item.seoDescription,["image size calculator","px to mm","mm to px","PPI calculator","bleed calculator"]);
 }
 
 export function toolKindFromSlug(slug: string): ToolKind | null {

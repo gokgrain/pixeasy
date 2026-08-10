@@ -4,6 +4,7 @@ import { Footer, Header } from "./site-shell";
 import { HomeUpload } from "./home-upload";
 import { localePath, type Locale, type Messages } from "@/lib/i18n";
 import { localizedTool, visibleHomeTools } from "@/lib/tool-catalog";
+import { calculatorContent } from "@/content/image-size-calculator";
 
 export function HomePage({ locale, messages }: { locale: Locale; messages: Messages }) {
   return (
@@ -26,6 +27,9 @@ export function HomePage({ locale, messages }: { locale: Locale; messages: Messa
           </div>
           <div className="tool-cards">
             {visibleHomeTools().map((tool) => {
+              if(tool.id==="image-size-calculator") return <Link className="tool-card" href={localePath(locale,"/image-size-calculator")} key={tool.id}>
+                <span className="card-icon" aria-hidden="true">{tool.icon}</span><strong>{calculatorContent[locale].title}</strong>
+              </Link>;
               const card = localizedTool(tool, messages);
               return <Link className="tool-card" href={localePath(locale, `/${card.slug}`)} key={card.id}>
                 <span className="card-icon" aria-hidden="true">{card.icon}</span>

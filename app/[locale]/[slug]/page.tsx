@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { LegalPage } from "@/components/legal-page";
 import { ToolPage } from "@/components/tool-page";
-import { getMessages, getToolConfig, isLocalizedLocale, localizedLocales, localizedMetadata, toolKindFromSlug, toolKinds, toolMetadata } from "@/lib/i18n";
+import { ImageSizeCalculatorPage } from "@/components/image-size-calculator-page";
+import { calculatorMetadata, getMessages, getToolConfig, isLocalizedLocale, localizedLocales, localizedMetadata, toolKindFromSlug, toolKinds, toolMetadata } from "@/lib/i18n";
 
 const legalSlugs = ["about","privacy","terms"] as const;
 type LegalSlug=(typeof legalSlugs)[number];
@@ -11,6 +12,7 @@ function isLegalSlug(value:string):value is LegalSlug{return legalSlugs.includes
 export function generateStaticParams(){
   return localizedLocales.flatMap((locale)=>[
     ...toolKinds.map((kind)=>({locale,slug:getMessages(locale).tools[kind].slug})),
+    {locale,slug:"image-size-calculator"},
     ...legalSlugs.map((slug)=>({locale,slug})),
   ]);
 }
@@ -20,6 +22,7 @@ export async function generateMetadata({params}:{params:Promise<{locale:string;s
   if(!isLocalizedLocale(locale)) return {};
   const kind=toolKindFromSlug(slug);
   if(kind) return toolMetadata(locale,kind);
+  if(slug==="image-size-calculator") return calculatorMetadata(locale);
   if(isLegalSlug(slug)){
     const page=getMessages(locale).legal[slug];
     return localizedMetadata(locale,`/${slug}`,page.seoTitle,page.seoDescription);
@@ -32,6 +35,7 @@ export default async function Page({params}:{params:Promise<{locale:string;slug:
   if(!isLocalizedLocale(locale)) notFound();
   const kind=toolKindFromSlug(slug);
   if(kind) return <ToolPage config={getToolConfig(locale,kind)}/>;
+  if(slug==="image-size-calculator") return <ImageSizeCalculatorPage locale={locale}/>;
   if(isLegalSlug(slug)){
     const messages=getMessages(locale);
     const page=messages.legal[slug];
