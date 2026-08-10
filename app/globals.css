@@ -210,7 +210,7 @@ h1,h2,h3,p { margin-top:0; }
 .input-with-unit { position:relative; }
 .input-with-unit input { padding-right:46px; }
 .input-with-unit b { position:absolute; right:13px; top:50%; transform:translateY(-50%); color:#62656b; font-size:.72rem; }
-.calculator-results { position:sticky; top:82px; }
+.calculator-results { position:static; }
 .size-result-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
 .size-result-grid article { min-height:104px; padding:15px; border:1px solid var(--line); border-radius:13px; background:#fffdfb; }
 .size-result-grid article>span,.bleed-result-card span,.difference-results span { display:block; color:#62656b; font-size:.72rem; }
