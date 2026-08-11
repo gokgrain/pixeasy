@@ -6,7 +6,8 @@ export type PendingImageAction =
   | "resize"
   | "transparent-background"
   | "grayscale"
-  | "invert";
+  | "invert"
+  | "pixelate";
 
 type PendingImage = {
   file: File;
