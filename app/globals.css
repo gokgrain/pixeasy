@@ -173,6 +173,7 @@ h1,h2,h3,p { margin-top:0; }
 .compression-result-grid { display:grid; grid-template-columns:minmax(0,1.2fr) minmax(260px,.8fr); gap:22px; align-items:start; }
 .compression-result .preview-box { min-height:280px; }
 .result-actions { display:grid; grid-template-columns:1fr auto; gap:12px; align-items:center; margin-top:18px; }
+.pixelate-workspace .preview-grid .preview-wrap:last-child img { image-rendering:pixelated; }
 @keyframes compress-pulse { to { opacity:.3; transform:scale(.75); } }
 .info-section { max-width:760px; margin:28px auto 0; }
 .info-card { border:1px solid var(--line); border-radius:16px; padding:22px; }

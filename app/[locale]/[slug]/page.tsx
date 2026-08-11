@@ -3,7 +3,8 @@ import { notFound } from "next/navigation";
 import { LegalPage } from "@/components/legal-page";
 import { ToolPage } from "@/components/tool-page";
 import { ImageSizeCalculatorPage } from "@/components/image-size-calculator-page";
-import { calculatorMetadata, getMessages, getToolConfig, isLocalizedLocale, localizedLocales, localizedMetadata, toolKindFromSlug, toolKinds, toolMetadata } from "@/lib/i18n";
+import { PixelateImagePage } from "@/components/pixelate-image-page";
+import { calculatorMetadata, getMessages, getToolConfig, isLocalizedLocale, localizedLocales, localizedMetadata, pixelateMetadata, toolKindFromSlug, toolKinds, toolMetadata } from "@/lib/i18n";
 
 const legalSlugs = ["about","privacy","terms"] as const;
 type LegalSlug=(typeof legalSlugs)[number];
@@ -13,6 +14,7 @@ export function generateStaticParams(){
   return localizedLocales.flatMap((locale)=>[
     ...toolKinds.map((kind)=>({locale,slug:getMessages(locale).tools[kind].slug})),
     {locale,slug:"image-size-calculator"},
+    {locale,slug:"pixelate-image"},
     ...legalSlugs.map((slug)=>({locale,slug})),
   ]);
 }
@@ -23,6 +25,7 @@ export async function generateMetadata({params}:{params:Promise<{locale:string;s
   const kind=toolKindFromSlug(slug);
   if(kind) return toolMetadata(locale,kind);
   if(slug==="image-size-calculator") return calculatorMetadata(locale);
+  if(slug==="pixelate-image") return pixelateMetadata(locale);
   if(isLegalSlug(slug)){
     const page=getMessages(locale).legal[slug];
     return localizedMetadata(locale,`/${slug}`,page.seoTitle,page.seoDescription);
@@ -36,6 +39,7 @@ export default async function Page({params}:{params:Promise<{locale:string;slug:
   const kind=toolKindFromSlug(slug);
   if(kind) return <ToolPage config={getToolConfig(locale,kind)}/>;
   if(slug==="image-size-calculator") return <ImageSizeCalculatorPage locale={locale}/>;
+  if(slug==="pixelate-image") return <PixelateImagePage locale={locale}/>;
   if(isLegalSlug(slug)){
     const messages=getMessages(locale);
     const page=messages.legal[slug];
