@@ -4,7 +4,7 @@ import { readFile } from "node:fs/promises";
 import { pixelateContent } from "../content/pixelate-image.ts";
 
 test("pixelate content is localized and FAQ data is visible",()=>{
-  for(const locale of ["en","ko","ja"]){const content=pixelateContent[locale];assert.ok(content.title);assert.equal(content.faqs.length,6);assert.equal(content.related.length,5);}
+  for(const locale of ["en","ko","ja"]){const content=pixelateContent[locale];assert.ok(content.title);assert.equal(content.faqs.length,8);assert.equal(content.related.length,5);assert.ok(content.ui.pixelArt);assert.ok(content.ui.dithering);}
 });
 
 test("pixelate routes and sitemap are registered",async()=>{
