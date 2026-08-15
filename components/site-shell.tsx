@@ -23,6 +23,7 @@ export function Header({ locale, messages }: { locale: Locale; messages: Message
           Pix<i>Easy</i>
         </Link>
         <nav className="nav" aria-label={messages.nav.primary}>
+          {locale === "en" && <Link href="/blog">Blog</Link>}
           <Link href={localePath(locale, "/about")}>{messages.nav.about}</Link>
           <Link className="all-tools-link" href={`${home}#all-tools`}>{messages.nav.allTools}</Link>
           <LanguageSwitcher locale={locale} messages={messages} />
@@ -38,7 +39,7 @@ export function Footer({ locale, messages }: { locale: Locale; messages: Message
       <div className="wrap footer-inner">
         <span>© {new Date().getFullYear()} PixEasy. {messages.nav.copyright}</span>
         <nav className="footer-links" aria-label={messages.nav.footer}>
-          <Link href={localePath(locale, "/about")}>{messages.nav.about}</Link><Link href={localePath(locale, "/privacy")}>{messages.nav.privacy}</Link><Link href={localePath(locale, "/terms")}>{messages.nav.terms}</Link><a href="mailto:support@pixeasytools.com">{messages.nav.contact}</a>
+          {locale === "en" && <Link href="/blog">Blog</Link>}<Link href={localePath(locale, "/about")}>{messages.nav.about}</Link><Link href={localePath(locale, "/privacy")}>{messages.nav.privacy}</Link><Link href={localePath(locale, "/terms")}>{messages.nav.terms}</Link><a href="mailto:support@pixeasytools.com">{messages.nav.contact}</a>
         </nav>
       </div>
     </footer>
