@@ -5,7 +5,7 @@ import { UploadDropzone } from "./upload-dropzone";
 import { ImagePreview } from "./image-preview";
 import type { ToolInfo } from "./tool-info-card";
 import { formatBytes, loadImage, renderImage, type LoadedImage } from "@/lib/image-processing";
-import type { PixelMode } from "@/lib/pixels";
+import { defaultInvertAdjustments, type InvertAdjustments, type PixelMode } from "@/lib/pixels";
 import { takePendingImage, type PendingImageAction } from "@/lib/pending-image";
 import type { Locale, Messages } from "@/lib/i18n";
 
@@ -43,7 +43,22 @@ export function ImageTool({ config }: { config: ToolConfig }) {
   const [resizeMode, setResizeMode] = useState<"width" | "height" | "exact">("width");
   const [width, setWidth] = useState(0);
   const [height, setHeight] = useState(0);
+  const [invertStrength, setInvertStrength] = useState(100);
+  const [invertChannels, setInvertChannels] = useState({ red: true, green: true, blue: true });
+  const [hue, setHue] = useState(0);
+  const [saturation, setSaturation] = useState(0);
+  const [brightness, setBrightness] = useState(0);
+  const [contrast, setContrast] = useState(0);
   const renderId = useRef(0);
+
+  const resetAdjustments = useCallback(() => {
+    setInvertStrength(defaultInvertAdjustments.strength);
+    setInvertChannels({ ...defaultInvertAdjustments.channels });
+    setHue(0);
+    setSaturation(0);
+    setBrightness(0);
+    setContrast(0);
+  }, []);
 
   const reset = useCallback(() => {
     setFile(null); setLoaded(null); setOriginalUrl(""); setResultUrl(""); setResultBlob(null); setError(""); setRemoveWhite(false); setTolerance(20);
@@ -55,6 +70,7 @@ export function ImageTool({ config }: { config: ToolConfig }) {
 
   async function chooseFile(nextFile: File, pendingAction?: PendingImageAction) {
     setBusy(true); setError("");
+    if (config.kind === "invert") resetAdjustments();
     setRemoveWhite(pendingAction === "remove-background"); setTolerance(20);
     const alternatePngInput = pendingAction === "remove-background";
     if (config.kind === "jpg-png" && nextFile.type !== "image/jpeg" && !alternatePngInput) {
@@ -90,12 +106,15 @@ export function ImageTool({ config }: { config: ToolConfig }) {
     const background = backgroundChoice === "white" ? "#ffffff" : backgroundChoice === "black" ? "#000000" : customBackground;
     const outputWidth = config.kind === "resize" ? width : loaded.width;
     const outputHeight = config.kind === "resize" ? height : loaded.height;
+    const previewScale = config.kind === "invert" ? Math.min(1, 1800 / Math.max(outputWidth, outputHeight)) : 1;
+    const invertAdjustments: InvertAdjustments = { strength: invertStrength, channels: invertChannels, hue, saturation, brightness, contrast };
     renderImage({
       loaded,
       mode: config.kind === "invert" || config.kind === "grayscale" ? mode : "original",
-      width: outputWidth, height: outputHeight,
+      width: Math.round(outputWidth * previewScale), height: Math.round(outputHeight * previewScale),
       removeWhite: config.kind === "jpg-png" && removeWhite,
       tolerance, format, quality: quality / 100, background,
+      invertAdjustments: config.kind === "invert" ? invertAdjustments : undefined,
     }).then((blob) => {
       if (currentId !== renderId.current) return;
       setError("");
@@ -104,7 +123,7 @@ export function ImageTool({ config }: { config: ToolConfig }) {
     }).catch((reason: unknown) => {
       if (currentId === renderId.current) setError(reason instanceof Error ? reason.message : t.processingError);
     }).finally(() => { if (currentId === renderId.current) setBusy(false); });
-  }, [loaded, mode, format, quality, removeWhite, tolerance, backgroundChoice, customBackground, width, height, config.kind, t.processingError]);
+  }, [loaded, mode, format, quality, removeWhite, tolerance, backgroundChoice, customBackground, width, height, config.kind, t.processingError, invertStrength, invertChannels, hue, saturation, brightness, contrast]);
 
   function setResizeValue(dimension: "width" | "height", value: number) {
     if (!loaded) return;
@@ -125,13 +144,30 @@ export function ImageTool({ config }: { config: ToolConfig }) {
     if (next === "height") setWidth(Math.round(height * loaded.width / loaded.height));
   }
 
-  function download() {
+  async function download() {
     if (!resultBlob || !file) return;
+    let downloadUrl = resultUrl;
+    if (config.kind === "invert" && loaded) {
+      setBusy(true);
+      try {
+        const blob = await renderImage({
+          loaded, mode, width: loaded.width, height: loaded.height, format, quality: quality / 100,
+          invertAdjustments: { strength: invertStrength, channels: invertChannels, hue, saturation, brightness, contrast },
+        });
+        downloadUrl = URL.createObjectURL(blob);
+      } catch (reason) {
+        setError(reason instanceof Error ? reason.message : t.processingError);
+        return;
+      } finally {
+        setBusy(false);
+      }
+    }
     const link = document.createElement("a");
-    link.href = resultUrl;
+    link.href = downloadUrl;
     const outputName = config.kind === "invert" || config.kind === "grayscale" ? mode : config.kind;
     link.download = `${file.name.replace(/\.[^.]+$/, "")}-${outputName}.${format === "png" ? "png" : "jpg"}`;
     link.click();
+    if (downloadUrl !== resultUrl) window.setTimeout(() => URL.revokeObjectURL(downloadUrl), 0);
   }
 
   const transparentResult = format === "png" && ((config.kind === "jpg-png" && removeWhite) || file?.type === "image/png");
@@ -163,7 +199,7 @@ export function ImageTool({ config }: { config: ToolConfig }) {
             <div className="file-details" aria-live="polite">
               <span>{t.original}: {loaded.width} × {loaded.height}px</span><span>{formatBytes(file?.size ?? 0)}</span>
               <span>{t.output}: {config.kind === "resize" ? `${width} × ${height}px` : `${loaded.width} × ${loaded.height}px`}</span>
-              {resultBlob && <span>{formatBytes(resultBlob.size)}</span>}
+              {resultBlob && config.kind !== "invert" && <span>{formatBytes(resultBlob.size)}</span>}
             </div>
           </section>
           <aside className="panel controls-panel">
@@ -174,6 +210,18 @@ export function ImageTool({ config }: { config: ToolConfig }) {
                   {(["original","invert","grayscale"] as PixelMode[]).map((item) => <button key={item} type="button" className={mode === item ? "active" : ""} onClick={() => setMode(item)}>{{original:t.originalMode,invert:t.invertMode,grayscale:t.grayscaleMode}[item]}</button>)}
                 </div></div>
               )}
+              {config.kind==="invert"&&mode==="invert"&&<section className="invert-settings" aria-labelledby="invert-settings-title">
+                <h3 id="invert-settings-title">{t.invertSettings}</h3>
+                <AdjustmentSlider label={t.invertStrength} value={invertStrength} min={0} max={100} suffix="%" onChange={setInvertStrength}/>
+                <fieldset className="channel-options"><legend>{t.invertChannels}</legend><div>{(["red","green","blue"] as const).map((channel)=><button type="button" key={channel} aria-pressed={invertChannels[channel]} onClick={()=>setInvertChannels((current)=>({...current,[channel]:!current[channel]}))}><span aria-hidden="true">{invertChannels[channel]?"✓":""}</span>{{red:t.red,green:t.green,blue:t.blue}[channel]}</button>)}</div></fieldset>
+                <details className="advanced-settings invert-advanced"><summary>{t.advancedAdjustments}</summary><div className="controls">
+                  <AdjustmentSlider label={t.hue} value={hue} min={-180} max={180} suffix="°" onChange={setHue}/>
+                  <AdjustmentSlider label={t.saturation} value={saturation} min={-100} max={100} signed onChange={setSaturation}/>
+                  <AdjustmentSlider label={t.brightness} value={brightness} min={-100} max={100} signed onChange={setBrightness}/>
+                  <AdjustmentSlider label={t.contrast} value={contrast} min={-100} max={100} signed onChange={setContrast}/>
+                </div></details>
+                <button className="text-btn adjustment-reset" type="button" onClick={resetAdjustments}>{t.resetAdjustments}</button>
+              </section>}
               {config.kind === "jpg-png" && <>
                 <fieldset className="conversion-mode">
                   <legend>{t.conversionMode}</legend>
@@ -218,4 +266,9 @@ export function ImageTool({ config }: { config: ToolConfig }) {
       {error && <p className="error" role="alert">{error}</p>}
     </>
   );
+}
+
+function AdjustmentSlider({label,value,min,max,suffix="",signed=false,onChange}:{label:string;value:number;min:number;max:number;suffix?:string;signed?:boolean;onChange:(value:number)=>void}){
+  const display=`${signed&&value>0?"+":""}${value}${suffix}`;
+  return <label className="field adjustment-slider"><span><span>{label}</span><output>{display}</output></span><input aria-label={label} type="range" min={min} max={max} value={value} onChange={(event)=>onChange(Number(event.target.value))}/></label>;
 }

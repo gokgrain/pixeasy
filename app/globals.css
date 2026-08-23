@@ -113,6 +113,20 @@ h1,h2,h3,p { margin-top:0; }
 .field>span,.field legend { font-size:.8rem; font-weight:750; }
 .field select,.field input[type="number"],.field input[type="color"] { width:100%; min-height:44px; border:1px solid #d8d8d5; border-radius:9px; padding:8px 11px; background:#fff; }
 .field input[type="range"] { width:100%; accent-color:var(--orange); }
+.invert-settings { display:grid; gap:16px; padding-top:2px; }
+.invert-settings>h3 { margin:0; font-size:.86rem; }
+.adjustment-slider>span { display:flex; align-items:center; justify-content:space-between; gap:16px; }
+.adjustment-slider output { color:var(--orange-dark); font-variant-numeric:tabular-nums; font-weight:750; }
+.adjustment-slider input[type="range"] { min-height:28px; cursor:pointer; }
+.adjustment-slider input[type="range"]::-webkit-slider-thumb { width:20px; height:20px; }
+.channel-options { min-width:0; margin:0; padding:0; border:0; }
+.channel-options legend { margin-bottom:8px; font-size:.8rem; font-weight:750; }
+.channel-options>div { display:grid; grid-template-columns:repeat(3,1fr); gap:7px; }
+.channel-options button { display:flex; align-items:center; justify-content:center; gap:6px; min-height:40px; padding:6px 8px; border:1px solid #dededb; border-radius:9px; background:#fff; color:#62646a; font-size:.76rem; font-weight:700; }
+.channel-options button[aria-pressed="true"] { border-color:var(--orange); background:#fff6ef; color:var(--orange-dark); box-shadow:0 0 0 2px rgba(255,134,44,.08); }
+.channel-options button span { width:14px; height:14px; display:grid; place-items:center; border:1px solid currentColor; border-radius:4px; font-size:.6rem; }
+.invert-advanced { margin:0; }
+.adjustment-reset { justify-self:start; padding-inline:0; }
 .segmented { display:grid; grid-template-columns:repeat(3,1fr); gap:5px; background:#f2f1ef; padding:4px; border-radius:10px; }
 .segmented button { border:0; min-height:38px; padding:5px; background:transparent; border-radius:7px; color:#616269; font-size:.78rem; font-weight:700; }
 .segmented button.active { background:#fff; color:#242424; box-shadow:0 2px 8px rgba(0,0,0,.07); }

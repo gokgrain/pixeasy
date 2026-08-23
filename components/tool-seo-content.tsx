@@ -67,7 +67,7 @@ function commonFaqs(config: ToolConfig) {
 }
 
 export function visibleToolFaqs(config: ToolConfig, content: ToolSeoContent) {
-  return [content.faqLead, ...content.extraFaqs.slice(0, 1), ...commonFaqs(config)];
+  return [content.faqLead, ...(config.kind === "invert" ? content.extraFaqs : content.extraFaqs.slice(0, 1)), ...commonFaqs(config)];
 }
 
 export function ToolTrustRow({ locale }: Pick<ToolConfig, "locale">) {
