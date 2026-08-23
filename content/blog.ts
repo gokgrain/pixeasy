@@ -1,6 +1,12 @@
-export type BlogPost = { slug:string; title:string; excerpt:string; published:string; reviewed:string; image:string; imageAlt:string };
+export type BlogPost = { slug:string; title:string; excerpt:string; published:string; reviewed:string; image:string; imageAlt:string; visual?:"2x2" };
 
 export const blogPosts:BlogPost[]=[{
+  slug:"2x2-photo-size",
+  title:"2×2 Inch Photo Size: Pixels, mm, cm & Common Uses",
+  excerpt:"See the exact 2×2 photo size in inches, mm, cm, and pixels—and why 600×600 applies at 300 PPI.",
+  published:"August 23, 2026",reviewed:"August 2026",
+  image:"/og.png",imageAlt:"2 by 2 inch photo size conversion diagram",visual:"2x2",
+},{
   slug:"us-passport-photo-requirements",
   title:"U.S. Passport Photo Requirements: Size, Smile & Rules",
   excerpt:"Check the official size, expression, glasses, background, and digital photo rules before you submit a U.S. passport application.",
@@ -8,6 +14,11 @@ export const blogPosts:BlogPost[]=[{
   image:"/us-passport-photo-requirements-examples.png",
   imageAlt:"Acceptable and unacceptable U.S. passport photo examples",
 }];
+
+export const localizedTwoByTwoCards={
+  ko:{title:"2×2인치 사진 크기는 몇 픽셀일까?",excerpt:"2×2인치를 mm·cm·픽셀로 환산하고 300 PPI에서 600×600이 되는 이유를 확인하세요.",published:"2026년 8월 23일",imageAlt:"2×2인치 사진 크기 환산 도표"},
+  ja:{title:"2×2インチ写真は何ピクセル？",excerpt:"2×2インチをmm・cm・ピクセルに換算し、300 PPIで600×600になる理由を確認できます。",published:"2026年8月23日",imageAlt:"2×2インチ写真サイズ換算図"},
+} as const;
 
 export const passportFaqs=[
   {question:"What size should a U.S. passport photo be?",answer:"A printed U.S. passport photo must be 2 × 2 inches (51 × 51 mm). The head must measure 1 to 1⅜ inches (25 to 35 mm) from the bottom of the chin to the top of the head."},
