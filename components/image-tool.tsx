@@ -3,8 +3,10 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { UploadDropzone } from "./upload-dropzone";
 import { ImagePreview } from "./image-preview";
+import { CropEditor } from "./crop-editor";
 import type { ToolInfo } from "./tool-info-card";
 import { formatBytes, loadImage, renderImage, type LoadedImage } from "@/lib/image-processing";
+import { centeredCropForRatio, cropToPixels, type NormalizedCrop } from "@/lib/crop";
 import { defaultInvertAdjustments, type InvertAdjustments, type PixelMode } from "@/lib/pixels";
 import { takePendingImage, type PendingImageAction } from "@/lib/pending-image";
 import type { Locale, Messages } from "@/lib/i18n";
@@ -43,6 +45,9 @@ export function ImageTool({ config }: { config: ToolConfig }) {
   const [resizeMode, setResizeMode] = useState<"width" | "height" | "exact">("width");
   const [width, setWidth] = useState(0);
   const [height, setHeight] = useState(0);
+  const [cropMode, setCropMode] = useState<"none" | "free" | "aspect">("none");
+  const [cropRatio, setCropRatio] = useState<"original" | "1:1" | "4:3" | "3:4" | "16:9" | "9:16" | "output">("1:1");
+  const [crop, setCrop] = useState<NormalizedCrop>({ x: 0, y: 0, width: 1, height: 1 });
   const [invertStrength, setInvertStrength] = useState(100);
   const [invertChannels, setInvertChannels] = useState({ red: true, green: true, blue: true });
   const [hue, setHue] = useState(0);
@@ -62,6 +67,7 @@ export function ImageTool({ config }: { config: ToolConfig }) {
 
   const reset = useCallback(() => {
     setFile(null); setLoaded(null); setOriginalUrl(""); setResultUrl(""); setResultBlob(null); setError(""); setRemoveWhite(false); setTolerance(20);
+    setCropMode("none"); setCropRatio("1:1"); setCrop({ x: 0, y: 0, width: 1, height: 1 });
   }, []);
 
   useEffect(() => () => loaded?.dispose(), [loaded]);
@@ -84,6 +90,7 @@ export function ImageTool({ config }: { config: ToolConfig }) {
       loaded?.dispose();
       setLoaded(nextLoaded); setFile(nextFile);
       setWidth(nextLoaded.width); setHeight(nextLoaded.height);
+      setCropMode("none"); setCropRatio("1:1"); setCrop({ x: 0, y: 0, width: 1, height: 1 });
       setOriginalUrl(URL.createObjectURL(nextFile));
     } catch {
       setError(t.decodeError);
@@ -106,7 +113,8 @@ export function ImageTool({ config }: { config: ToolConfig }) {
     const background = backgroundChoice === "white" ? "#ffffff" : backgroundChoice === "black" ? "#000000" : customBackground;
     const outputWidth = config.kind === "resize" ? width : loaded.width;
     const outputHeight = config.kind === "resize" ? height : loaded.height;
-    const previewScale = config.kind === "invert" ? Math.min(1, 1800 / Math.max(outputWidth, outputHeight)) : 1;
+    const previewScale = config.kind === "invert" || config.kind === "resize" ? Math.min(1, 1800 / Math.max(outputWidth, outputHeight)) : 1;
+    const sourceCrop = config.kind === "resize" ? cropToPixels(cropMode === "none" ? fullCrop : crop, loaded.width, loaded.height) : undefined;
     const invertAdjustments: InvertAdjustments = { strength: invertStrength, channels: invertChannels, hue, saturation, brightness, contrast };
     renderImage({
       loaded,
@@ -115,6 +123,7 @@ export function ImageTool({ config }: { config: ToolConfig }) {
       removeWhite: config.kind === "jpg-png" && removeWhite,
       tolerance, format, quality: quality / 100, background,
       invertAdjustments: config.kind === "invert" ? invertAdjustments : undefined,
+      crop: sourceCrop,
     }).then((blob) => {
       if (currentId !== renderId.current) return;
       setError("");
@@ -123,36 +132,84 @@ export function ImageTool({ config }: { config: ToolConfig }) {
     }).catch((reason: unknown) => {
       if (currentId === renderId.current) setError(reason instanceof Error ? reason.message : t.processingError);
     }).finally(() => { if (currentId === renderId.current) setBusy(false); });
-  }, [loaded, mode, format, quality, removeWhite, tolerance, backgroundChoice, customBackground, width, height, config.kind, t.processingError, invertStrength, invertChannels, hue, saturation, brightness, contrast]);
+  }, [loaded, mode, format, quality, removeWhite, tolerance, backgroundChoice, customBackground, width, height, config.kind, t.processingError, invertStrength, invertChannels, hue, saturation, brightness, contrast, crop, cropMode]);
+
+  const activeCrop = cropMode === "none" ? fullCrop : crop;
+  const cropPixelWidth = loaded ? Math.max(1, Math.round(activeCrop.width * loaded.width)) : 1;
+  const cropPixelHeight = loaded ? Math.max(1, Math.round(activeCrop.height * loaded.height)) : 1;
+  const activeCropRatio = cropPixelWidth / cropPixelHeight;
 
   function setResizeValue(dimension: "width" | "height", value: number) {
     if (!loaded) return;
     const safe = Math.max(1, Math.min(32767, Math.round(value || 1)));
     if (dimension === "width") {
       setWidth(safe);
-      if (resizeMode === "width") setHeight(Math.max(1, Math.round(safe * loaded.height / loaded.width)));
+      if (resizeMode === "width") setHeight(Math.max(1, Math.round(safe / activeCropRatio)));
     } else {
       setHeight(safe);
-      if (resizeMode === "height") setWidth(Math.max(1, Math.round(safe * loaded.width / loaded.height)));
+      if (resizeMode === "height") setWidth(Math.max(1, Math.round(safe * activeCropRatio)));
     }
   }
 
   function changeResizeMode(next: "width" | "height" | "exact") {
     setResizeMode(next);
     if (!loaded) return;
-    if (next === "width") setHeight(Math.round(width * loaded.height / loaded.width));
-    if (next === "height") setWidth(Math.round(height * loaded.width / loaded.height));
+    if (next === "width") setHeight(Math.max(1, Math.round(width / activeCropRatio)));
+    if (next === "height") setWidth(Math.max(1, Math.round(height * activeCropRatio)));
+  }
+
+  function updateCrop(next: NormalizedCrop) {
+    setCrop(next);
+    if (!loaded) return;
+    const ratio = (next.width * loaded.width) / (next.height * loaded.height);
+    if (resizeMode === "width") setHeight(Math.max(1, Math.round(width / ratio)));
+    if (resizeMode === "height") setWidth(Math.max(1, Math.round(height * ratio)));
+  }
+
+  function chooseCropMode(next: "none" | "free" | "aspect") {
+    setCropMode(next);
+    if (!loaded || next === "none") return;
+    if (next === "free") updateCrop(crop.width === 1 && crop.height === 1 ? { x: .1, y: .1, width: .8, height: .8 } : crop);
+    if (next === "aspect") applyCropRatio(cropRatio);
+  }
+
+  function ratioValue(value: typeof cropRatio) {
+    if (!loaded) return 1;
+    if (value === "original") return loaded.width / loaded.height;
+    if (value === "output") return Math.max(1, width) / Math.max(1, height);
+    const [ratioWidth, ratioHeight] = value.split(":").map(Number);
+    return ratioWidth / ratioHeight;
+  }
+
+  function applyCropRatio(value: typeof cropRatio) {
+    if (!loaded) return;
+    setCropRatio(value);
+    const ratio = ratioValue(value);
+    updateCrop(centeredCropForRatio(loaded.width, loaded.height, ratio));
+  }
+
+  function resetCrop() {
+    if (cropMode === "aspect") applyCropRatio(cropRatio);
+    else updateCrop(cropMode === "none" ? fullCrop : { x: .1, y: .1, width: .8, height: .8 });
   }
 
   async function download() {
     if (!resultBlob || !file) return;
     let downloadUrl = resultUrl;
-    if (config.kind === "invert" && loaded) {
+    if ((config.kind === "invert" || config.kind === "resize") && loaded) {
       setBusy(true);
       try {
         const blob = await renderImage({
-          loaded, mode, width: loaded.width, height: loaded.height, format, quality: quality / 100,
-          invertAdjustments: { strength: invertStrength, channels: invertChannels, hue, saturation, brightness, contrast },
+          loaded,
+          mode: config.kind === "invert" ? mode : "original",
+          width: config.kind === "resize" ? width : loaded.width,
+          height: config.kind === "resize" ? height : loaded.height,
+          format,
+          quality: quality / 100,
+          invertAdjustments: config.kind === "invert"
+            ? { strength: invertStrength, channels: invertChannels, hue, saturation, brightness, contrast }
+            : undefined,
+          crop: config.kind === "resize" ? cropToPixels(activeCrop, loaded.width, loaded.height) : undefined,
         });
         downloadUrl = URL.createObjectURL(blob);
       } catch (reason) {
@@ -189,11 +246,13 @@ export function ImageTool({ config }: { config: ToolConfig }) {
         <p>{displayDescription}</p>
       </header>
       {!loaded ? <UploadDropzone onFile={chooseFile} compact messages={config.messages.upload} /> : (
-        <div className="workspace">
+        <div className={`workspace ${config.kind === "resize" ? "resize-workspace" : ""}`}>
           <section className="panel" aria-labelledby="preview-title">
             <div className="panel-title"><h2 id="preview-title">{t.preview}</h2><button type="button" className="reset-btn" onClick={reset}>{t.reset}</button></div>
             <div className="preview-grid">
-              <ImagePreview label={t.original} url={originalUrl} transparent={file?.type === "image/png"} />
+              {config.kind === "resize" && cropMode !== "none"
+                ? <CropEditor label={t.original} url={originalUrl} crop={crop} ratio={cropMode === "aspect" ? ratioValue(cropRatio) : null} onChange={updateCrop} selectionLabel={t.cropSelection} />
+                : <ImagePreview label={t.original} url={originalUrl} transparent={file?.type === "image/png"} />}
               <ImagePreview label={busy ? t.processing : t.result} url={resultUrl} transparent={transparentResult} empty={t.processing} />
             </div>
             <div className="file-details" aria-live="polite">
@@ -243,6 +302,18 @@ export function ImageTool({ config }: { config: ToolConfig }) {
                 {backgroundChoice === "custom" && <label className="field"><span>{t.customBackground}</span><input type="color" value={customBackground} onChange={(event) => setCustomBackground(event.target.value)} /></label>}
               </>}
               {config.kind === "resize" && <>
+                <section className="crop-controls" aria-labelledby="crop-title">
+                  <div className="control-heading"><h3 id="crop-title">{t.cropImage}</h3><button type="button" className="text-btn" onClick={resetCrop}>{t.resetCrop}</button></div>
+                  <div className="field"><span>{t.cropMode}</span><div className="segmented crop-mode-options">
+                    <button type="button" className={cropMode === "none" ? "active" : ""} onClick={() => chooseCropMode("none")}>{t.noCrop}</button>
+                    <button type="button" className={cropMode === "free" ? "active" : ""} onClick={() => chooseCropMode("free")}>{t.freeCrop}</button>
+                    <button type="button" className={cropMode === "aspect" ? "active" : ""} onClick={() => chooseCropMode("aspect")}>{t.aspectCrop}</button>
+                  </div></div>
+                  {cropMode === "aspect" && <label className="field"><span>{t.aspectRatio}</span><select value={cropRatio} onChange={(event) => applyCropRatio(event.target.value as typeof cropRatio)}>
+                    <option value="original">{t.originalRatio}</option><option value="1:1">1:1</option><option value="4:3">4:3</option><option value="3:4">3:4</option><option value="16:9">16:9</option><option value="9:16">9:16</option><option value="output">{t.useOutputRatio}</option>
+                  </select></label>}
+                  <p className="crop-selection" aria-live="polite">{t.selection}: {cropPixelWidth} × {cropPixelHeight}px</p>
+                </section>
                 <div className="field"><span>{t.resizeMode}</span><div className="segmented">
                   <button type="button" className={resizeMode === "width" ? "active" : ""} onClick={() => changeResizeMode("width")}>{t.setWidth}</button>
                   <button type="button" className={resizeMode === "height" ? "active" : ""} onClick={() => changeResizeMode("height")}>{t.setHeight}</button>
@@ -272,3 +343,5 @@ function AdjustmentSlider({label,value,min,max,suffix="",signed=false,onChange}:
   const display=`${signed&&value>0?"+":""}${value}${suffix}`;
   return <label className="field adjustment-slider"><span><span>{label}</span><output>{display}</output></span><input aria-label={label} type="range" min={min} max={max} value={value} onChange={(event)=>onChange(Number(event.target.value))}/></label>;
 }
+
+const fullCrop: NormalizedCrop = { x: 0, y: 0, width: 1, height: 1 };

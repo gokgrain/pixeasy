@@ -1,6 +1,7 @@
 import { adjustInvertPixels, removeWhitePixels, transformPixels, type InvertAdjustments, type PixelMode } from "./pixels";
 
 export type LoadedImage = { source: CanvasImageSource; width: number; height: number; dispose: () => void };
+export type CropRect = { x: number; y: number; width: number; height: number };
 
 export async function loadImage(file: File): Promise<LoadedImage> {
   if ("createImageBitmap" in window) {
@@ -25,6 +26,7 @@ export async function renderImage(options: {
   quality?: number;
   background?: string;
   invertAdjustments?: InvertAdjustments;
+  crop?: CropRect;
 }) {
   const width = Math.max(1, Math.round(options.width ?? options.loaded.width));
   const height = Math.max(1, Math.round(options.height ?? options.loaded.height));
@@ -38,7 +40,12 @@ export async function renderImage(options: {
   }
   context.imageSmoothingEnabled = true;
   context.imageSmoothingQuality = "high";
-  context.drawImage(options.loaded.source, 0, 0, width, height);
+  const crop = options.crop ?? { x: 0, y: 0, width: options.loaded.width, height: options.loaded.height };
+  context.drawImage(
+    options.loaded.source,
+    crop.x, crop.y, crop.width, crop.height,
+    0, 0, width, height,
+  );
   if ((options.mode && options.mode !== "original") || options.removeWhite) {
     const imageData = context.getImageData(0, 0, width, height);
     let pixels = options.mode === "invert" && options.invertAdjustments ? adjustInvertPixels(imageData.data,options.invertAdjustments) : options.mode ? transformPixels(imageData.data, options.mode) : imageData.data;
