@@ -1,4 +1,4 @@
-import { removeWhitePixels, transformPixels, type PixelMode } from "./pixels";
+import { adjustInvertPixels, removeWhitePixels, transformPixels, type InvertAdjustments, type PixelMode } from "./pixels";
 
 export type LoadedImage = { source: CanvasImageSource; width: number; height: number; dispose: () => void };
 
@@ -24,6 +24,7 @@ export async function renderImage(options: {
   format: "png" | "jpg";
   quality?: number;
   background?: string;
+  invertAdjustments?: InvertAdjustments;
 }) {
   const width = Math.max(1, Math.round(options.width ?? options.loaded.width));
   const height = Math.max(1, Math.round(options.height ?? options.loaded.height));
@@ -40,7 +41,7 @@ export async function renderImage(options: {
   context.drawImage(options.loaded.source, 0, 0, width, height);
   if ((options.mode && options.mode !== "original") || options.removeWhite) {
     const imageData = context.getImageData(0, 0, width, height);
-    let pixels = options.mode ? transformPixels(imageData.data, options.mode) : imageData.data;
+    let pixels = options.mode === "invert" && options.invertAdjustments ? adjustInvertPixels(imageData.data,options.invertAdjustments) : options.mode ? transformPixels(imageData.data, options.mode) : imageData.data;
     if (options.removeWhite) pixels = removeWhitePixels(pixels, options.tolerance ?? 20);
     const safePixels = new Uint8ClampedArray(pixels.length);
     safePixels.set(pixels);

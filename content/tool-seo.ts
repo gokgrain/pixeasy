@@ -20,7 +20,7 @@ const useCases: Record<Locale, Record<LegacyToolKind, string[]>> = {
     "png-jpg": ["Reduce the size of photographic images used on a website.", "Create a file that is easier to upload to common forms.", "Replace transparency with a chosen background for general photo use.", "Prepare a smaller image for an email attachment.", "Help image-heavy pages load faster."],
     resize: ["Change an image to exact width and height pixels.", "Match an online submission or marketplace image specification.", "Prepare a profile or account photo.", "Fit an image neatly into a blog post or article.", "Fit an image into a presentation slide or document."],
     grayscale: ["Inspect contrast without color influencing the result.", "Prepare an image for black-and-white printing.", "Create a restrained monochrome visual style.", "Reduce color distractions while editing a composition.", "Compare lighting and tonal balance more clearly."],
-    invert: ["View photographed or scanned film negatives more easily.", "Improve the readability of some scanned documents.", "Reveal different details in dark or low-contrast images.", "Check contrast while editing graphics.", "Create an intentional inverted-color effect."],
+    invert: ["View photographed or scanned film negatives more easily.", "Improve the readability of some scanned documents.", "Reveal different details in dark or low-contrast images.", "Reduce an inversion effect that feels too strong.", "Fine-tune hue, saturation, brightness, or contrast after inversion.", "Invert selected RGB channels for a creative color effect."],
   },
   ko: {
     compress: ["원본 화질을 실용적으로 유지하며 이미지 용량을 줄일 때", "이미지를 500KB, 1MB 등 목표 용량에 맞출 때", "웹사이트나 온라인 제출 양식의 업로드 제한을 맞출 때", "이메일 첨부용 사진 용량을 줄일 때", "온라인 지원서에 넣을 이미지 파일을 준비할 때", "고화질 스마트폰 사진을 더 가볍게 공유할 때"],
@@ -28,7 +28,7 @@ const useCases: Record<Locale, Record<LegacyToolKind, string[]>> = {
     "png-jpg": ["웹사이트에 사용할 사진 이미지의 용량을 줄일 때", "온라인 양식에 더 쉽게 올릴 수 있는 파일이 필요할 때", "투명 영역에 배경색을 넣어 일반 사진처럼 사용할 때", "이메일 첨부용 이미지를 가볍게 준비할 때", "이미지가 많은 페이지의 로딩 부담을 줄일 때"],
     resize: ["이미지의 가로·세로 픽셀을 정확하게 변경할 때", "온라인 제출용 이미지 규격이나 쇼핑몰 업로드 크기를 맞출 때", "프로필 사진을 원하는 픽셀 크기로 준비할 때", "블로그나 게시글에 맞는 이미지 크기를 만들 때", "프레젠테이션이나 문서에 넣기 전에 크기를 조정할 때"],
     grayscale: ["색상의 영향 없이 이미지 명암을 분석할 때", "흑백 인쇄용 이미지를 준비할 때", "차분한 모노크롬 효과를 만들 때", "편집 중 색상으로 인한 시각적 방해를 줄일 때", "조명과 밝기 균형을 더 분명하게 비교할 때"],
-    invert: ["필름 네거티브를 보기 쉬운 색상으로 확인할 때", "스캔 문서의 글자와 배경 구분을 개선해 볼 때", "어둡거나 대비가 낮은 이미지의 다른 디테일을 찾을 때", "그래픽 편집 중 명암 대비를 점검할 때", "의도적인 색상 반전 효과를 만들 때"],
+    invert: ["필름 네거티브를 보기 쉬운 색상으로 확인할 때", "스캔 문서의 글자와 배경 구분을 개선해 볼 때", "어둡거나 대비가 낮은 이미지의 다른 디테일을 찾을 때", "반전 효과가 너무 강해 강도를 낮추고 싶을 때", "반전 후 채도, 밝기, 대비 또는 색조를 조정하고 싶을 때", "특정 RGB 채널만 반전해 색상 효과를 만들고 싶을 때"],
   },
   ja: {
     compress: ["実用的な画質を保ちながら元画像の容量を減らすとき", "画像を500KB、1MBなどの目標容量に合わせるとき", "Webサイトやオンライン提出フォームの容量制限に合わせるとき", "メールに添付する前に写真を軽くしたいとき", "オンライン応募用の画像ファイルを準備するとき", "高画質のスマートフォン写真を共有しやすくするとき"],
@@ -36,7 +36,7 @@ const useCases: Record<Locale, Record<LegacyToolKind, string[]>> = {
     "png-jpg": ["Webサイト用の写真画像を軽くしたいとき", "一般的なフォームへアップロードしやすくするとき", "透明部分に背景色を入れて通常の写真として使うとき", "メール添付用の画像を小さくしたいとき", "画像の多いページを読み込みやすくしたいとき"],
     resize: ["画像の幅・高さを正確なピクセル数へ変更するとき", "オンライン提出や販売ページの画像規格に合わせるとき", "プロフィール画像を必要なピクセル数で準備するとき", "ブログ記事に合う画像サイズへ整えるとき", "プレゼンテーションや文書への配置前に寸法を調整するとき"],
     grayscale: ["色に左右されず画像のコントラストを確認するとき", "白黒印刷用の画像を準備するとき", "落ち着いたモノクロ表現を作るとき", "編集時の色による視覚的な影響を減らすとき", "光と明暗のバランスを比較するとき"],
-    invert: ["撮影またはスキャンしたフィルムネガを見やすくするとき", "スキャン文書の文字を読みやすくできるか確認するとき", "暗い画像や低コントラスト画像の別の細部を見るとき", "グラフィック編集でコントラストを点検するとき", "意図的な色反転エフェクトを作るとき"],
+    invert: ["撮影またはスキャンしたフィルムネガを見やすくするとき", "スキャン文書の文字を読みやすくできるか確認するとき", "暗い画像や低コントラスト画像の別の細部を見るとき", "反転効果が強すぎるときに強さを下げたいとき", "反転後の色相、彩度、明るさ、コントラストを整えたいとき", "特定のRGBチャンネルだけを反転して色効果を作りたいとき"],
   },
 };
 
@@ -137,15 +137,16 @@ const content: Record<Locale, Record<LegacyToolKind, ToolSeoContentCore>> = {
       related: ["invert", "resize", "jpg-png", "png-jpg"],
     },
     invert: {
-      steps: ["Upload a JPG, PNG, or WebP image.", "Select Invert and choose an output format.", "Check the color-negative preview and download it."],
+      steps: ["Upload a JPG, PNG, or WebP image.", "Adjust inversion strength, channels, or optional color settings.", "Check the live preview and download the result."],
       practical: [
         { heading: "What color inversion does", body: "Each red, green, and blue channel is replaced with its opposite value. Light areas become dark, dark areas become light, and colors shift to their digital complements." },
         { heading: "Common uses", body: "An inverted image can create a photographic-negative effect, reveal contrast in technical images, or provide a fast starting point for experimental graphics and artwork." },
         { heading: "Output and transparency", body: "PNG output can preserve transparent pixels, while JPG output places the image in a non-transparent format. Compare the live result before choosing the file you need." },
       ],
       extraFaqs: [
-        { question: "Does inverting an image damage the original file?", answer: "No. PixEasy creates a separate result in your browser and does not modify the source file on your device." },
-        { question: "Can I invert the image back to its original colors?", answer: "Applying the same inversion again returns the color values to their original state, apart from any separate lossy JPG encoding." },
+        { question: "Can I adjust the strength of the color inversion?", answer: "Yes. The Invert Strength slider blends the original RGB values with the fully inverted values from 0% to 100%." },
+        { question: "Can I invert only certain colors?", answer: "Yes. Toggle the red, green, and blue channels independently to invert only the channels you choose." },
+        { question: "What if the inverted colors look too strong?", answer: "Open Advanced adjustments to refine hue, saturation, brightness, and contrast while watching the preview update." },
       ],
       related: ["grayscale", "resize", "jpg-png", "png-jpg"],
     },
@@ -219,15 +220,16 @@ const content: Record<Locale, Record<LegacyToolKind, ToolSeoContentCore>> = {
       related: ["invert", "resize", "jpg-png", "png-jpg"],
     },
     invert: {
-      steps: ["JPG, PNG 또는 WebP 이미지를 선택합니다.", "색상 반전과 출력 형식을 선택합니다.", "네거티브 결과를 확인하고 다운로드합니다."],
+      steps: ["JPG, PNG 또는 WebP 이미지를 선택합니다.", "반전 강도와 색상 채널, 필요한 세부 조정값을 설정합니다.", "실시간 결과를 확인하고 다운로드합니다."],
       practical: [
         { heading: "색상 반전 원리", body: "빨강, 초록, 파랑 채널의 값을 각각 반대 값으로 바꿉니다. 밝은 부분은 어두워지고 어두운 부분은 밝아지며 색상은 디지털 보색으로 변합니다." },
         { heading: "활용 방법", body: "필름 네거티브와 비슷한 표현을 만들거나 기술 이미지의 대비를 확인할 때, 실험적인 그래픽과 창작 이미지의 출발점을 만들 때 사용할 수 있습니다." },
         { heading: "출력 형식과 투명도", body: "PNG 출력은 투명 픽셀을 유지할 수 있고 JPG는 투명도를 지원하지 않습니다. 실시간 결과를 비교한 뒤 필요한 형식을 선택하세요." },
       ],
       extraFaqs: [
-        { question: "색상 반전이 원본 파일을 변경하나요?", answer: "아니요. 브라우저에서 별도의 결과를 만들며 기기에 저장된 원본 파일은 수정하지 않습니다." },
-        { question: "반전된 이미지를 다시 원래 색으로 돌릴 수 있나요?", answer: "같은 반전을 한 번 더 적용하면 색상 값은 원래 상태로 돌아옵니다. 단, 별도의 JPG 압축 손실은 제외됩니다." },
+        { question: "색상반전 강도를 조절할 수 있나요?", answer: "네. 반전 강도 슬라이더로 원본 RGB 값과 완전히 반전된 값 사이의 효과를 0%부터 100%까지 조절할 수 있습니다." },
+        { question: "특정 색상만 반전할 수 있나요?", answer: "네. 빨강, 초록, 파랑 채널을 각각 켜고 끄며 원하는 RGB 채널만 반전할 수 있습니다." },
+        { question: "반전 후 색상이 너무 강하면 어떻게 하나요?", answer: "세부 색상 조정을 열어 색조, 채도, 밝기, 대비를 조절하면서 미리보기로 바로 확인할 수 있습니다." },
       ],
       related: ["grayscale", "resize", "jpg-png", "png-jpg"],
     },
@@ -301,15 +303,16 @@ const content: Record<Locale, Record<LegacyToolKind, ToolSeoContentCore>> = {
       related: ["invert", "resize", "jpg-png", "png-jpg"],
     },
     invert: {
-      steps: ["JPG、PNG、WebP画像を選択します。", "色反転と出力形式を選びます。", "ネガ効果を確認して保存します。"],
+      steps: ["JPG、PNG、WebP画像を選択します。", "反転の強さ、チャンネル、必要な詳細設定を調整します。", "ライブプレビューを確認して保存します。"],
       practical: [
         { heading: "色反転の仕組み", body: "赤、緑、青の各チャンネルを反対の値に置き換えます。明るい部分は暗く、暗い部分は明るくなり、色はデジタル上の補色へ変わります。" },
         { heading: "主な用途", body: "写真ネガのような表現、技術画像のコントラスト確認、実験的なグラフィックやアートワークの出発点などに利用できます。" },
         { heading: "出力形式と透明度", body: "PNG出力では透明ピクセルを保持できます。JPGは透明度に対応しません。ライブプレビューを比較して必要な形式を選んでください。" },
       ],
       extraFaqs: [
-        { question: "色反転で元ファイルは変更されますか？", answer: "いいえ。ブラウザ内で別の結果を作成し、端末にある元ファイルは変更しません。" },
-        { question: "反転画像を元の色に戻せますか？", answer: "同じ反転をもう一度適用すると色の値は元に戻ります。ただし、別途行われたJPG圧縮の影響は除きます。" },
+        { question: "色反転の強さを調整できますか？", answer: "はい。反転の強さスライダーで、元のRGB値から完全反転まで0%〜100%の範囲で調整できます。" },
+        { question: "特定の色だけを反転できますか？", answer: "はい。赤、緑、青のチャンネルを個別に切り替え、選んだRGBチャンネルだけを反転できます。" },
+        { question: "反転後の色が強すぎる場合は？", answer: "詳細調整を開き、色相、彩度、明るさ、コントラストをプレビューで確認しながら整えられます。" },
       ],
       related: ["grayscale", "resize", "jpg-png", "png-jpg"],
     },
