@@ -113,6 +113,17 @@
     "custom": "Custom",
     "customBackground": "Custom background color",
     "resizeMode": "Resize mode",
+    "cropImage": "Crop image",
+    "cropMode": "Crop mode",
+    "noCrop": "No crop",
+    "freeCrop": "Free crop",
+    "aspectCrop": "Aspect ratio crop",
+    "aspectRatio": "Aspect ratio",
+    "originalRatio": "Original",
+    "useOutputRatio": "Use output ratio",
+    "resetCrop": "Reset crop",
+    "selection": "Selection",
+    "cropSelection": "Crop selection. Use arrow keys to adjust.",
     "setWidth": "Set width",
     "setHeight": "Set height",
     "exact": "Exact",
@@ -375,14 +386,14 @@
       "slug": "resize-image",
       "title": "Resize Image",
       "seoTitle": "Resize Image Online Free | Change Photo Pixels | PixEasy",
-      "seoDescription": "Resize JPG, PNG, and WebP images free with no login or install. Change pixel dimensions in your browser without uploads or storage.",
+      "seoDescription": "Crop and resize JPG, PNG, and WebP images free in your browser. Change composition and pixel dimensions without uploads or storage.",
       "keywords": [
         "resize image",
         "resize photo",
         "image resizer",
         "resize image online"
       ],
-      "description": "Resize JPG, PNG, and WebP images for free with no login or app. Change pixel dimensions locally in your browser without uploads or storage.",
+      "description": "Crop unwanted areas, then resize JPG, PNG, and WebP images to exact pixels. Preview and download locally without server uploads.",
       "purpose": "Change pixel dimensions",
       "input": "JPG, PNG, WebP",
       "output": "PNG or JPG",
@@ -390,7 +401,7 @@
         "Set width or height to preserve aspect ratio.",
         "Choose exact dimensions for a fixed size."
       ],
-      "about": "PixEasy resizes JPG, PNG, and WebP images to the pixel dimensions you need. Set width or height while preserving aspect ratio, or choose exact dimensions for a fixed canvas. Preview the result before downloading PNG or JPG. Resizing is useful for websites, profile photos, email, presentations, and marketplace listings. Processing takes place entirely in your browser. Your image is not uploaded, inspected, or stored. The resizer is free, needs no account, and adds no watermark.",
+      "about": "PixEasy lets you crop JPG, PNG, and WebP images before resizing them to the pixel dimensions you need. Move and resize a free crop frame, choose a fixed aspect ratio, or skip cropping and use the original image. Width or height mode preserves the current crop ratio, while exact mode uses fixed dimensions. Preview the final crop and resize before downloading PNG or JPG. Processing takes place entirely in your browser, so your image is never uploaded or stored.",
       "faqs": [
         {
           "question": "Can I resize without stretching?",
