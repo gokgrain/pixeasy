@@ -241,7 +241,7 @@ export function ImageTool({ config }: { config: ToolConfig }) {
     : config.description;
   return (
     <>
-      <header className="tool-intro">
+      <header className="tool-intro" id={config.kind === "invert" ? "invert-tool" : undefined}>
         <h1>{displayTitle}</h1>
         <p>{displayDescription}</p>
       </header>

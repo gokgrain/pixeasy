@@ -4,6 +4,7 @@ import { localePath } from "@/lib/i18n";
 import type { ToolConfig } from "./image-tool";
 import type { ToolSeoContent } from "@/content/tool-seo";
 import type { ReactNode } from "react";
+import { InvertSeoGuide } from "./invert-seo-guide";
 
 const labels = {
   en: { useful: "When is this useful?", how: "How to use", practical: "Helpful information", why: "Why PixEasy?", faq: "Frequently asked questions", related: "Related tools" },
@@ -77,6 +78,21 @@ export function ToolTrustRow({ locale }: Pick<ToolConfig, "locale">) {
 export function ToolSeoContent({ config, content, advertisement }: { config: ToolConfig; content: ToolSeoContent; advertisement?: ReactNode }) {
   const t = labels[config.locale];
   const faqs = visibleToolFaqs(config, content);
+  if (config.kind === "invert") return (
+    <div className="tool-supporting-content">
+      {advertisement}
+      <InvertSeoGuide locale={config.locale} />
+      <section className="support-section" aria-labelledby="how-to-title">
+        <h2 id="how-to-title">{t.how}</h2>
+        <ol className="how-to-steps">{content.steps.map((step) => <li key={step}><span>{step}</span></li>)}</ol>
+      </section>
+      <section className="support-section" aria-labelledby="faq-title"><h2 id="faq-title">{t.faq}</h2><FaqAccordion items={faqs} /></section>
+      <section className="support-section" aria-labelledby="related-title">
+        <h2 id="related-title">{t.related}</h2>
+        <nav className="related-tool-grid" aria-label={t.related}>{content.related.map((kind) => { const tool = config.messages.tools[kind]; return <Link key={kind} href={localePath(config.locale, `/${tool.slug}`)}><strong>{tool.title}</strong><span>{tool.description}</span></Link>; })}</nav>
+      </section>
+    </div>
+  );
   return (
     <div className="tool-supporting-content">
       <section className="support-section useful-section" aria-labelledby="useful-title">
