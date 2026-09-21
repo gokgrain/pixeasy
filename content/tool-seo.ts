@@ -47,7 +47,7 @@ const faqLeads: Record<Locale, Record<LegacyToolKind, ToolSeoContent["faqLead"]>
     "png-jpg": { question: "When should I convert PNG to JPG?", answer: "Convert photographic PNG files to JPG when transparency is not needed and a smaller, widely accepted image file is more useful." },
     resize: { question: "When should I resize an image instead of compressing it?", answer: "Resize when a page, slide, profile, print layout, or upload form requires specific pixel dimensions." },
     grayscale: { question: "When is grayscale more useful than color?", answer: "Grayscale helps when checking contrast and lighting, preparing black-and-white printing, or creating a monochrome visual style." },
-    invert: { question: "When should I invert image colors?", answer: "Invert colors to inspect film negatives, test graphic contrast, explore dark-image detail, or create a deliberate negative effect." },
+    invert: { question: "Is image inversion the same as a negative?", answer: "They are closely related. Digital color inversion creates a negative-style appearance by reversing color values, but accurate scanned-film conversion may need correction beyond simple RGB inversion." },
   },
   ko: {
     compress: { question: "목표 용량 이미지 압축은 언제 필요한가요?", answer: "온라인 양식, 웹사이트, 이메일, 지원서에서 특정 KB 또는 MB 이하의 이미지가 필요할 때 사용하세요." },
@@ -55,7 +55,7 @@ const faqLeads: Record<Locale, Record<LegacyToolKind, ToolSeoContent["faqLead"]>
     "png-jpg": { question: "PNG를 JPG로 변환해야 하는 경우는 언제인가요?", answer: "투명도가 필요 없는 사진형 PNG를 더 작고 폭넓게 사용할 수 있는 이미지 파일로 만들 때 유용합니다." },
     resize: { question: "이미지 압축 대신 크기 조절이 필요한 경우는 언제인가요?", answer: "게시글, 슬라이드, 프로필, 인쇄물, 업로드 양식에서 정확한 픽셀 크기를 요구할 때 사용하세요." },
     grayscale: { question: "컬러보다 흑백 이미지가 유용한 경우는 언제인가요?", answer: "명암과 조명을 확인하거나 흑백 인쇄를 준비할 때, 모노크롬 분위기를 만들 때 유용합니다." },
-    invert: { question: "이미지 색상 반전은 언제 사용하면 좋나요?", answer: "필름 네거티브를 확인하거나 그래픽 대비를 점검할 때, 어두운 이미지의 다른 디테일이나 네거티브 효과를 보고 싶을 때 사용하세요." },
+    invert: { question: "이미지 색상 반전과 네거티브 이미지는 같은가요?", answer: "서로 밀접한 개념입니다. 디지털 색상 반전은 색상 값을 반대로 바꿔 네거티브와 비슷한 모습을 만들지만, 스캔한 필름을 정확히 변환하려면 단순 RGB 반전 외의 보정이 필요할 수 있습니다." },
   },
   ja: {
     compress: { question: "画像を目標容量へ圧縮するのはどんなときですか？", answer: "フォーム、Webサイト、メール、応募書類などで指定のKBまたはMB以下にする必要があるときに使います。" },
@@ -63,7 +63,7 @@ const faqLeads: Record<Locale, Record<LegacyToolKind, ToolSeoContent["faqLead"]>
     "png-jpg": { question: "PNGをJPGへ変換するのはどんなときですか？", answer: "透明度が不要な写真系PNGを、より小さく一般的に扱いやすい画像へ変えたいときに便利です。" },
     resize: { question: "圧縮ではなく画像サイズ変更が必要なのはどんなときですか？", answer: "記事、スライド、プロフィール、印刷物、アップロードフォームで指定ピクセル寸法が必要なときに使います。" },
     grayscale: { question: "カラーよりグレースケールが役立つのはどんなときですか？", answer: "コントラストや光を確認するとき、白黒印刷の準備、モノクロ表現の作成に役立ちます。" },
-    invert: { question: "画像の色反転はどんなときに使いますか？", answer: "フィルムネガの確認、グラフィックのコントラスト点検、暗い画像の別の細部確認、ネガ効果の作成に使えます。" },
+    invert: { question: "画像の色反転とネガ画像は同じですか？", answer: "密接に関係しています。デジタルの色反転は色の値を逆にしてネガ風にしますが、スキャンしたフィルムを正確に変換するには単純なRGB反転以外の補正が必要な場合があります。" },
   },
 };
 
@@ -145,11 +145,13 @@ const content: Record<Locale, Record<LegacyToolKind, ToolSeoContentCore>> = {
         { heading: "Output and transparency", body: "PNG output can preserve transparent pixels, while JPG output places the image in a non-transparent format. Compare the live result before choosing the file you need." },
       ],
       extraFaqs: [
-        { question: "Can I adjust the strength of the color inversion?", answer: "Yes. The Invert Strength slider blends the original RGB values with the fully inverted values from 0% to 100%." },
-        { question: "Can I invert only certain colors?", answer: "Yes. Toggle the red, green, and blue channels independently to invert only the channels you choose." },
-        { question: "What if the inverted colors look too strong?", answer: "Open Advanced adjustments to refine hue, saturation, brightness, and contrast while watching the preview update." },
+        { question: "Is inverting an image the same as flipping it?", answer: "No. Inverting changes image colors. Flipping changes direction or orientation, such as mirroring left to right or reversing top and bottom." },
+        { question: "Does inverting an image reduce image quality?", answer: "Color inversion changes pixel values rather than image dimensions. Final file quality can also depend on the output format and encoding used when the image is saved." },
+        { question: "Can I use image inversion to see faint details?", answer: "It can change the contrast relationship between details and the background, making some existing lines or edges easier to inspect. It cannot recover information missing from the original." },
+        { question: "Can I use image inversion to read a medical test?", answer: "Inversion can change how faint lines appear on screen, but it should not be used to determine or confirm a medical result. Follow the test instructions and seek appropriate medical guidance." },
+        { question: "Can I adjust the inversion effect?", answer: "Yes. Use Invert Strength, individual RGB channels, or the advanced hue, saturation, brightness, and contrast controls while watching the live preview." },
       ],
-      related: ["grayscale", "resize", "jpg-png", "png-jpg"],
+      related: ["grayscale", "resize", "compress", "jpg-png"],
     },
   },
   ko: {
@@ -229,11 +231,13 @@ const content: Record<Locale, Record<LegacyToolKind, ToolSeoContentCore>> = {
         { heading: "출력 형식과 투명도", body: "PNG 출력은 투명 픽셀을 유지할 수 있고 JPG는 투명도를 지원하지 않습니다. 실시간 결과를 비교한 뒤 필요한 형식을 선택하세요." },
       ],
       extraFaqs: [
-        { question: "색상반전 강도를 조절할 수 있나요?", answer: "네. 반전 강도 슬라이더로 원본 RGB 값과 완전히 반전된 값 사이의 효과를 0%부터 100%까지 조절할 수 있습니다." },
-        { question: "특정 색상만 반전할 수 있나요?", answer: "네. 빨강, 초록, 파랑 채널을 각각 켜고 끄며 원하는 RGB 채널만 반전할 수 있습니다." },
-        { question: "반전 후 색상이 너무 강하면 어떻게 하나요?", answer: "세부 색상 조정을 열어 색조, 채도, 밝기, 대비를 조절하면서 미리보기로 바로 확인할 수 있습니다." },
+        { question: "이미지 색상 반전과 좌우·상하 반전은 같은가요?", answer: "아닙니다. 색상 반전은 이미지의 색을 바꾸고, 좌우·상하 반전은 색을 유지한 채 이미지의 방향을 바꿉니다." },
+        { question: "색상 반전을 하면 이미지 품질이 낮아지나요?", answer: "색상 반전 자체는 이미지 크기가 아니라 픽셀의 색상 값을 변경합니다. 최종 품질은 저장할 때 선택한 출력 형식과 인코딩의 영향도 받을 수 있습니다." },
+        { question: "색상 반전으로 희미한 디테일을 볼 수 있나요?", answer: "디테일과 배경의 대비 관계가 달라져 원본에 있는 선이나 가장자리가 보기 쉬워질 수 있습니다. 원본에 없는 정보가 복원되는 것은 아닙니다." },
+        { question: "의료 검사 결과를 색상 반전으로 판독해도 되나요?", answer: "색상 반전은 화면에서 선이 보이는 방식을 바꿀 수 있지만 의료 결과를 판단하거나 확인하는 용도로 사용하면 안 됩니다. 제품 설명과 적절한 의료 안내를 따르세요." },
+        { question: "색상 반전 효과를 조절할 수 있나요?", answer: "네. 실시간 미리보기를 보며 반전 강도, RGB 채널, 색조, 채도, 밝기, 대비를 조절할 수 있습니다." },
       ],
-      related: ["grayscale", "resize", "jpg-png", "png-jpg"],
+      related: ["grayscale", "resize", "compress", "jpg-png"],
     },
   },
   ja: {
@@ -313,11 +317,13 @@ const content: Record<Locale, Record<LegacyToolKind, ToolSeoContentCore>> = {
         { heading: "出力形式と透明度", body: "PNG出力では透明ピクセルを保持できます。JPGは透明度に対応しません。ライブプレビューを比較して必要な形式を選んでください。" },
       ],
       extraFaqs: [
-        { question: "色反転の強さを調整できますか？", answer: "はい。反転の強さスライダーで、元のRGB値から完全反転まで0%〜100%の範囲で調整できます。" },
-        { question: "特定の色だけを反転できますか？", answer: "はい。赤、緑、青のチャンネルを個別に切り替え、選んだRGBチャンネルだけを反転できます。" },
-        { question: "反転後の色が強すぎる場合は？", answer: "詳細調整を開き、色相、彩度、明るさ、コントラストをプレビューで確認しながら整えられます。" },
+        { question: "画像の色反転と左右・上下反転は同じですか？", answer: "いいえ。色反転は画像の色を変えます。左右・上下反転は色を保ったまま画像の向きを変えます。" },
+        { question: "色反転で画質は低下しますか？", answer: "色反転そのものは画像寸法ではなくピクセルの色値を変えます。最終的な画質は保存時の形式やエンコードにも左右されます。" },
+        { question: "色反転で淡いディテールを確認できますか？", answer: "細部と背景のコントラスト関係が変わり、元画像にある線や輪郭が見やすくなる場合があります。存在しない情報を復元するものではありません。" },
+        { question: "医療検査の判定に色反転を使えますか？", answer: "色反転は画面上の線の見え方を変えますが、医療結果の判定や確認には使用しないでください。製品の説明と適切な医療案内に従ってください。" },
+        { question: "色反転の効果を調整できますか？", answer: "はい。ライブプレビューを見ながら、反転の強さ、RGBチャンネル、色相、彩度、明るさ、コントラストを調整できます。" },
       ],
-      related: ["grayscale", "resize", "jpg-png", "png-jpg"],
+      related: ["grayscale", "resize", "compress", "jpg-png"],
     },
   },
 };

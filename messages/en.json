@@ -145,7 +145,7 @@
     "pngOnly": "PNG to JPG accepts PNG files. Choose a PNG image to continue.",
     "originalTitle": "Original Image",
     "originalDescription": "Keep the image unchanged while choosing an output format.",
-    "invertDescription": "Reverse every color for a clean photographic negative effect.",
+    "invertDescription": "Invert image colors online to create a negative effect. Upload your image, adjust the inversion strength, and preview the result instantly in your browser.",
     "grayscaleDescription": "Create a balanced black-and-white image using weighted luminance.",
     "originalExplanation": [
       "The original color values are preserved without applying an effect.",
@@ -247,9 +247,9 @@
     },
     "invert": {
       "slug": "invert-image",
-      "title": "Invert Image",
-      "seoTitle": "Invert Image Colors Online Free | PixEasy",
-      "seoDescription": "Invert image colors free with no login or install. Check film negatives and dark details locally in your browser without uploads.",
+      "title": "Invert Image Colors Online",
+      "seoTitle": "Invert Image Colors Online – Free Image Inverter | PixEasy",
+      "seoDescription": "Invert image colors online for free. Create a negative effect, adjust the inversion, and preview the result instantly in your browser with PixEasy.",
       "keywords": [
         "invert image",
         "invert image colors",
