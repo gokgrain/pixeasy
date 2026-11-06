@@ -1,21 +1,22 @@
 "use client";
 import { useEffect,useMemo,useState } from "react";
 import { CityCombobox,CityLabel } from "./city-combobox";
-import { cities,cityById,cityForZone,type City } from "@/lib/world-cities";
+import { cities,cityById,type City } from "@/lib/world-cities";
 import { dayDifference,formatDifference,formatOffset,offsetMinutes,parseLocal,partsAt,relativeOffset,resolveLocalTime,timeZoneName,toDateInput,toTimeInput } from "@/lib/world-time";
 import type { Locale } from "@/lib/i18n";
 import type { WorldTimeContent } from "@/content/world-time";
 
 const defaults=["new-york","los-angeles","seoul","sydney"];
+const localeDefaults={en:"new-york",ko:"seoul",ja:"tokyo"} as const;
 const localeCode={en:"en-US",ko:"ko-KR",ja:"ja-JP"} as const;
 const validIds=(value:string[])=>[...new Set(value)].filter(id=>cityById(id));
 
 export function WorldTimeConverter({locale,content}:{locale:Locale;content:WorldTimeContent}){
  const t=content.ui,lc=localeCode[locale];
- const [baseId,setBaseId]=useState("seoul"),[selected,setSelected]=useState(defaults),[date,setDate]=useState("2026-11-09"),[time,setTime]=useState("14:30"),[hour12,setHour12]=useState(false),[choice,setChoice]=useState(0),[ready,setReady]=useState(false),[feedback,setFeedback]=useState("");
+ const [baseId,setBaseId]=useState<string>(localeDefaults[locale]),[selected,setSelected]=useState(defaults),[date,setDate]=useState("2026-11-09"),[time,setTime]=useState("14:30"),[hour12,setHour12]=useState(false),[choice,setChoice]=useState(0),[ready,setReady]=useState(false),[feedback,setFeedback]=useState("");
  const base=cityById(baseId)??cities[0],parsed=parseLocal(date,time);
- useEffect(()=>{queueMicrotask(()=>{const params=new URLSearchParams(location.search),sharedBase=cityById(params.get("b")??""),hasSharedInstant=params.has("t"),sharedInstant=Number(params.get("t")),sharedCities=validIds((params.get("c")??"").split(","));if(sharedBase&&hasSharedInstant&&Number.isFinite(sharedInstant)){const p=partsAt(sharedInstant,sharedBase.zone);setBaseId(sharedBase.id);setDate(toDateInput(p));setTime(toTimeInput(p));setSelected(validIds([sharedBase.id,...sharedCities]));setHour12(params.get("h")==="12");setReady(true);return;}let savedBase:City|undefined,savedIds:string[]=[],savedHour12=false;try{const saved=JSON.parse(localStorage.getItem("pixeasy-world-time")??"null");savedBase=cityById(saved?.baseId);savedIds=validIds(saved?.selected??[]);savedHour12=Boolean(saved?.hour12)}catch{}const browserCity=cityForZone(Intl.DateTimeFormat().resolvedOptions().timeZone),b=savedBase??browserCity??cityById("seoul")!,p=partsAt(Date.now(),b.zone);setBaseId(b.id);setDate(toDateInput(p));setTime(toTimeInput(p));setSelected(validIds([b.id,...(savedIds.length?savedIds:defaults)]));setHour12(savedHour12);setReady(true)})},[]);
- useEffect(()=>{if(ready)localStorage.setItem("pixeasy-world-time",JSON.stringify({baseId,selected,hour12}))},[ready,baseId,selected,hour12]);
+ useEffect(()=>{queueMicrotask(()=>{const params=new URLSearchParams(location.search),sharedBase=cityById(params.get("b")??""),hasSharedInstant=params.has("t"),sharedInstant=Number(params.get("t")),sharedCities=validIds((params.get("c")??"").split(","));if(sharedBase&&hasSharedInstant&&Number.isFinite(sharedInstant)){const p=partsAt(sharedInstant,sharedBase.zone);setBaseId(sharedBase.id);setDate(toDateInput(p));setTime(toTimeInput(p));setSelected(validIds([sharedBase.id,...sharedCities]));setHour12(params.get("h")==="12");setReady(true);return;}let savedBase:City|undefined,savedIds:string[]=[],savedHour12=false;try{const saved=JSON.parse(localStorage.getItem(`pixeasy-world-time-${locale}`)??"null");savedBase=cityById(saved?.baseId);savedIds=validIds(saved?.selected??[]);savedHour12=Boolean(saved?.hour12)}catch{}const b=savedBase??cityById(localeDefaults[locale])!,p=partsAt(Date.now(),b.zone);setBaseId(b.id);setDate(toDateInput(p));setTime(toTimeInput(p));setSelected(validIds([b.id,...(savedIds.length?savedIds:defaults)]));setHour12(savedHour12);setReady(true)})},[locale]);
+ useEffect(()=>{if(ready)localStorage.setItem(`pixeasy-world-time-${locale}`,JSON.stringify({baseId,selected,hour12}))},[ready,baseId,selected,hour12,locale]);
  const candidates=useMemo(()=>ready&&parsed?resolveLocalTime(parsed,base.zone):[],[ready,parsed,base.zone]);
  const instant=candidates[Math.min(choice,candidates.length-1)]??null;
  const ordered=useMemo(()=>validIds([baseId,...selected]),[baseId,selected]);
