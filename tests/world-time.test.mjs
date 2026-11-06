@@ -1,0 +1,16 @@
+import test from "node:test";
+import assert from "node:assert/strict";
+import { searchCities } from "../lib/world-cities.ts";
+import { dayDifference,offsetMinutes,parseLocal,partsAt,relativeOffset,resolveLocalTime } from "../lib/world-time.ts";
+
+test("city search supports multilingual names, countries, aliases and partial matches",()=>{
+  for(const query of ["Seoul","서울","ソウル","Korea","Republic of Korea","South Korea","KR"])assert.equal(searchCities(query)[0].id,"seoul");
+  assert.equal(searchCities("NYC")[0].id,"new-york");assert.equal(searchCities("LA")[0].id,"los-angeles");assert.equal(searchCities("시드")[0].id,"sydney");assert.equal(searchCities("東京")[0].id,"tokyo");
+});
+test("selected cities remain identifiable for duplicate prevention",()=>{const result=searchCities("Seoul",["seoul"]);assert.equal(result[0].id,"seoul");});
+test("New York converts correctly to Los Angeles, Seoul and Sydney",()=>{const p=parseLocal("2026-11-09","14:30"),instant=resolveLocalTime(p,"America/New_York")[0];assert.deepEqual(partsAt(instant,"America/Los_Angeles"),{year:2026,month:11,day:9,hour:11,minute:30});assert.deepEqual(partsAt(instant,"Asia/Seoul"),{year:2026,month:11,day:10,hour:4,minute:30});assert.deepEqual(partsAt(instant,"Australia/Sydney"),{year:2026,month:11,day:10,hour:6,minute:30});assert.equal(relativeOffset(instant,"Asia/Seoul","America/New_York"),840);});
+test("half-hour and quarter-hour offsets are preserved",()=>{const instant=Date.UTC(2026,0,15,0);assert.equal(offsetMinutes(instant,"Asia/Kolkata"),330);assert.equal(offsetMinutes(instant,"Asia/Kathmandu"),345);assert.equal(offsetMinutes(instant,"Australia/Adelaide"),630);assert.equal(offsetMinutes(instant,"Pacific/Chatham"),825);});
+test("DST rules vary by city and date",()=>{assert.equal(offsetMinutes(Date.UTC(2026,0,15,12),"Australia/Sydney"),660);assert.equal(offsetMinutes(Date.UTC(2026,6,15,12),"Australia/Sydney"),600);assert.equal(offsetMinutes(Date.UTC(2026,0,15,12),"America/New_York"),-300);assert.equal(offsetMinutes(Date.UTC(2026,6,15,12),"America/New_York"),-240);});
+test("nonexistent and ambiguous DST times are detected",()=>{assert.equal(resolveLocalTime(parseLocal("2026-03-08","02:30"),"America/New_York").length,0);const repeated=resolveLocalTime(parseLocal("2026-11-01","01:30"),"America/New_York");assert.equal(repeated.length,2);assert.deepEqual(repeated.map(x=>offsetMinutes(x,"America/New_York")),[-240,-300]);});
+test("previous day, next day, year boundary and leap day work",()=>{const instant=resolveLocalTime(parseLocal("2026-12-31","23:30"),"America/New_York")[0];assert.equal(partsAt(instant,"Asia/Seoul").year,2027);assert.equal(dayDifference(instant,"Asia/Seoul","America/New_York"),1);const west=resolveLocalTime(parseLocal("2026-01-01","01:00"),"Asia/Seoul")[0];assert.equal(dayDifference(west,"America/Los_Angeles","Asia/Seoul"),-1);assert.ok(resolveLocalTime(parseLocal("2028-02-29","12:00"),"Europe/London").length);});
+test("switching base city preserves the same instant",()=>{const instant=resolveLocalTime(parseLocal("2026-05-10","09:15"),"Asia/Seoul")[0],newBase=partsAt(instant,"Europe/London"),roundTrip=resolveLocalTime(newBase,"Europe/London");assert.ok(roundTrip.includes(instant));});

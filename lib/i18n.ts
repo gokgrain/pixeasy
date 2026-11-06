@@ -5,6 +5,7 @@ import ko from "@/messages/ko.json";
 import ja from "@/messages/ja.json";
 import { calculatorContent } from "@/content/image-size-calculator";
 import { pixelateContent } from "@/content/pixelate-image";
+import { worldTimeContent } from "@/content/world-time";
 
 export const siteUrl = "https://pixeasytools.com";
 export const locales = ["en", "ko", "ja"] as const;
@@ -99,6 +100,11 @@ export function calculatorMetadata(locale: Locale): Metadata {
 export function pixelateMetadata(locale:Locale):Metadata{
   const item=pixelateContent[locale];
   return localizedMetadata(locale,"/pixelate-image",item.seoTitle,item.seoDescription,["pixelate image","pixel art effect","pixelated image","image pixelator","dot image"]);
+}
+
+export function worldTimeMetadata(locale:Locale):Metadata{
+  const item=worldTimeContent[locale];
+  return localizedMetadata(locale,"/world-time-converter",item.seoTitle,item.seoDescription);
 }
 
 export function toolKindFromSlug(slug: string): ToolKind | null {

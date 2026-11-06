@@ -1,6 +1,6 @@
 import { languageAlternates, localePath, locales, siteUrl } from "@/lib/i18n";
 
-const paths = ["", "/invert-image", "/grayscale-image", "/jpg-to-png", "/png-to-jpg", "/resize-image", "/compress-image", "/make-background-transparent", "/pixelate-image", "/image-size-calculator", "/blog", "/blog/2x2-photo-size", "/about", "/privacy", "/terms"];
+const paths = ["", "/invert-image", "/grayscale-image", "/jpg-to-png", "/png-to-jpg", "/resize-image", "/compress-image", "/make-background-transparent", "/pixelate-image", "/image-size-calculator", "/world-time-converter", "/blog", "/blog/2x2-photo-size", "/about", "/privacy", "/terms"];
 const englishOnlyPaths = ["/blog/us-passport-photo-requirements"];
 
 function alternateLinks(path:string){

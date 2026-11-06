@@ -5,6 +5,7 @@ import { HomeUpload } from "./home-upload";
 import { localePath, type Locale, type Messages } from "@/lib/i18n";
 import { localizedTool, visibleHomeTools } from "@/lib/tool-catalog";
 import { calculatorContent } from "@/content/image-size-calculator";
+import { worldTimeContent } from "@/content/world-time";
 
 export function HomePage({ locale, messages }: { locale: Locale; messages: Messages }) {
   return (
@@ -30,6 +31,10 @@ export function HomePage({ locale, messages }: { locale: Locale; messages: Messa
               if(tool.id==="image-size-calculator") return <Link className="tool-card" href={localePath(locale,"/image-size-calculator")} key={tool.id}>
                 <span className="card-icon" aria-hidden="true">{tool.icon}</span><strong>{calculatorContent[locale].title}</strong>
               </Link>;
+              if(tool.id==="world-time-converter") return <Link className="tool-card" href={localePath(locale,"/world-time-converter")} key={tool.id}>
+                <span className="card-icon" aria-hidden="true">{tool.icon}</span><strong>{worldTimeContent[locale].title.split(" – ")[0]}</strong>
+              </Link>;
+              if(!("action" in tool)) return null;
               const card = localizedTool(tool, messages);
               return <Link className="tool-card" href={localePath(locale, `/${card.slug}`)} key={card.id}>
                 <span className="card-icon" aria-hidden="true">{card.icon}</span>

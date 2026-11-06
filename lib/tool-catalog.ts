@@ -20,7 +20,7 @@ export type ToolCatalogItem = {
 };
 
 export type UtilityCatalogItem = {
-  id:"image-size-calculator";
+  id:"image-size-calculator"|"world-time-converter";
   icon:string;
   homeCardVisible:true;
   displayOrder:number;
@@ -41,6 +41,7 @@ export const toolCatalog: readonly ToolCatalogItem[] = [
 
 export const utilityToolCatalog: readonly UtilityCatalogItem[] = [
   {id:"image-size-calculator",icon:"⌗",homeCardVisible:true,displayOrder:9},
+  {id:"world-time-converter",icon:"◷",homeCardVisible:true,displayOrder:10},
 ] as const;
 
 export function visibleHomeTools() {

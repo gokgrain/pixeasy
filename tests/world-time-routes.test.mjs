@@ -1,0 +1,7 @@
+import test from "node:test";
+import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
+import { worldTimeContent } from "../content/world-time.ts";
+test("world time content is complete in EN KO and JA",()=>{for(const locale of ["en","ko","ja"]){const c=worldTimeContent[locale];assert.ok(c.title);assert.equal(c.faqs.length,6);assert.equal(c.steps.length,3);assert.equal(c.practical.length,4);}});
+test("world time routes metadata structured data and sitemap are registered",async()=>{const localized=await readFile(new URL("../app/[locale]/[slug]/page.tsx",import.meta.url),"utf8"),sitemap=await readFile(new URL("../app/sitemap.xml/route.ts",import.meta.url),"utf8"),page=await readFile(new URL("../components/world-time-converter-page.tsx",import.meta.url),"utf8");assert.match(localized,/world-time-converter/);assert.match(sitemap,/world-time-converter/);assert.match(page,/WebApplication/);assert.match(page,/BreadcrumbList/);assert.match(page,/FAQPage/);assert.match(page,/content\.faqs\.map/);});
+test("world time UI includes direct entry slider city management copy share and preference restoration",async()=>{const ui=await readFile(new URL("../components/world-time-converter.tsx",import.meta.url),"utf8");for(const pattern of [/type="text"/,/type="range"/,/addCity/,/remove/,/makeBase/,/navigator\.clipboard/,/URLSearchParams/,/localStorage/,/hour12/,/resolveLocalTime/])assert.match(ui,pattern);});
