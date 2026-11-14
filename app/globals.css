@@ -505,6 +505,16 @@ h1,h2,h3,p { margin-top:0; }
 .blog-card-size-visual>strong small { display:block; margin-top:6px; color:#77797f; font-size:.75rem; }
 .blog-card-size-visual>b { color:#55575c; }
 .world-time-panel { padding:24px; border:1px solid var(--line); border-radius:20px; background:#fff; box-shadow:0 12px 38px rgba(32,27,23,.055); }
+.world-time-page .tool-intro { max-width:980px; }
+.world-time-page .tool-intro h1 span { display:block; }
+.live-time-banner { display:flex; align-items:center; justify-content:space-between; gap:24px; margin-bottom:22px; padding:20px 22px; border:1px solid #ffd6b8; border-radius:17px; background:linear-gradient(135deg,#fff8f2,#fff 68%); }
+.live-time-banner>div:first-child { display:grid; grid-template-columns:28px 1fr; align-items:center; gap:7px; min-width:0; }
+.live-time-banner>div:first-child>span:first-child { grid-column:1 / -1; color:var(--orange-dark); font-size:.72rem; font-weight:800; letter-spacing:.08em; text-transform:uppercase; }
+.live-time-banner strong,.live-time-banner small { display:block; }
+.live-time-banner small { margin-top:2px; color:var(--muted); font-size:.7rem; font-weight:500; }
+.live-clock { display:flex; align-items:center; gap:16px; min-width:0; }
+.live-clock time { color:#171717; font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace; font-size:clamp(2.1rem,5vw,3.6rem); font-weight:800; font-variant-numeric:tabular-nums; letter-spacing:-.07em; line-height:1; white-space:nowrap; }
+.live-clock>span { padding:9px 12px; border:1px solid #eee2d8; border-radius:10px; background:#fff; color:#56585d; font-size:.78rem; font-weight:700; white-space:nowrap; }
 .world-time-controls { display:grid; grid-template-columns:1.25fr 1fr 1fr; gap:14px; align-items:end; }
 .world-time-controls>label,.city-combobox { display:grid; gap:7px; min-width:0; }
 .world-time-controls label>span,.city-combobox>label,.base-city-display>span,.time-slider>span { color:#4f5156; font-size:.78rem; font-weight:750; }
@@ -541,7 +551,9 @@ h1,h2,h3,p { margin-top:0; }
 .world-time-cards article.base-card { border-color:#ffc79f; background:#fff8f2; }
 .city-card-heading { display:grid; grid-template-columns:28px 1fr auto; align-items:center; gap:8px; }
 .city-card-heading>span:last-child { padding:5px 8px; border-radius:999px; background:#f0efed; color:#66686d; font-size:.65rem; }
-.world-time-cards time { display:block; margin:17px 0 13px; font-size:1.35rem; font-weight:800; letter-spacing:-.035em; }
+.city-card-datetime { display:flex; align-items:center; justify-content:space-between; gap:14px; margin:18px 0 16px; }
+.world-time-cards .city-card-datetime time { display:block; margin:0; font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace; font-size:clamp(2rem,4vw,3rem); font-weight:800; font-variant-numeric:tabular-nums; letter-spacing:-.07em; line-height:1; white-space:nowrap; }
+.city-card-datetime>span { max-width:150px; padding:8px 10px; border:1px solid #e9e4df; border-radius:9px; background:#fff; color:#65676c; font-size:.7rem; font-weight:700; line-height:1.35; text-align:center; }
 .world-time-cards dl { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:0; }
 .world-time-cards dt { color:var(--muted); font-size:.67rem; }
 .world-time-cards dd { margin:4px 0 0; font-size:.78rem; font-weight:700; }
@@ -572,10 +584,15 @@ h1,h2,h3,p { margin-top:0; }
   .world-time-page { width:calc(100% - 22px); max-width:100%; }
   .world-time-panel { width:100%; min-width:0; padding:14px; border-radius:16px; overflow:hidden; }
   .world-time-page .tool-intro h1 { overflow-wrap:anywhere; }
+  .live-time-banner { display:grid; gap:14px; padding:16px; }
+  .live-clock { align-items:flex-end; justify-content:space-between; gap:10px; }
+  .live-clock time { font-size:clamp(2rem,12vw,3rem); }
+  .live-clock>span { max-width:132px; white-space:normal; text-align:center; }
   .world-time-controls { width:100%; min-width:0; grid-template-columns:1fr; gap:10px; }
   .world-time-controls>.city-combobox,.base-city-display,.time-slider { grid-column:1 / -1; }
   .city-manager { grid-template-columns:1fr; gap:10px; }
   .world-time-cards { grid-template-columns:1fr; }
-  .world-time-cards time { font-size:1.2rem; }
+  .city-card-datetime { align-items:flex-end; }
+  .world-time-cards .city-card-datetime time { font-size:clamp(2rem,12vw,2.8rem); }
   .world-time-actions .primary-btn,.world-time-actions>button:not(.primary-btn) { flex:1 1 140px; min-height:44px; }
 }
