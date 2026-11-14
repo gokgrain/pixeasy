@@ -14,6 +14,7 @@ export const cities:readonly City[]=[
   c("new-york","America/New_York","🇺🇸","US",["New York","뉴욕","ニューヨーク"],US,["nyc","new york city","america","usa"],true,["New York","뉴욕주","ニューヨーク州"]),
   c("los-angeles","America/Los_Angeles","🇺🇸","US",["Los Angeles","로스앤젤레스","ロサンゼルス"],US,["la","lax","california","usa"],true,["California","캘리포니아","カリフォルニア州"]),
   c("chicago","America/Chicago","🇺🇸","US",["Chicago","시카고","シカゴ"],US,["chi","illinois","usa"],false,["Illinois","일리노이","イリノイ州"]),
+  c("dallas","America/Chicago","🇺🇸","US",["Dallas","댈러스","ダラス"],US,["dfw","texas","usa"],false,["Texas","텍사스","テキサス州"]),
   c("denver","America/Denver","🇺🇸","US",["Denver","덴버","デンバー"],US,["colorado","mountain time","usa"],false,["Colorado","콜로라도","コロラド州"]),
   c("honolulu","Pacific/Honolulu","🇺🇸","US",["Honolulu","호놀룰루","ホノルル"],US,["hawaii","hnl","usa"],false,["Hawaii","하와이","ハワイ州"]),
   c("anchorage","America/Anchorage","🇺🇸","US",["Anchorage","앵커리지","アンカレッジ"],US,["alaska","usa"],false,["Alaska","알래스카","アラスカ州"]),
@@ -55,6 +56,10 @@ export const cities:readonly City[]=[
 
 export function cityById(id:string){return cities.find((city)=>city.id===id);}
 export function cityForZone(zone:string){return cities.find((city)=>city.zone===zone);}
+export function replaceCityId(ids:string[],oldId:string,nextId:string){
+  if(oldId===nextId||ids.includes(nextId))return [...ids];
+  return ids.map((id)=>id===oldId?nextId:id);
+}
 const fold=(value:string)=>value.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLocaleLowerCase().trim();
 export function searchCities(query:string,selected:string[]=[]){
   const q=fold(query); const selectedSet=new Set(selected);
