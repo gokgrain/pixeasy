@@ -14,3 +14,11 @@ export function dayDifference(instant:number,zone:string,baseZone:string){return
 export function toDateInput(p:LocalParts){return `${p.year}-${String(p.month).padStart(2,"0")}-${String(p.day).padStart(2,"0")}`;}
 export function toTimeInput(p:LocalParts){return `${String(p.hour).padStart(2,"0")}:${String(p.minute).padStart(2,"0")}`;}
 export function timeZoneName(instant:number,zone:string,locale:string){return new Intl.DateTimeFormat(locale,{timeZone:zone,timeZoneName:"short"}).formatToParts(instant).find(p=>p.type==="timeZoneName")?.value??zone;}
+export type LocalTimeStatus="business"|"daytime"|"early"|"evening"|"night";
+export function localTimeStatus(instant:number,zone:string):{weekend:boolean;status:LocalTimeStatus;weekday:number}{
+  const p=partsAt(instant,zone),weekday=new Date(Date.UTC(p.year,p.month-1,p.day)).getUTCDay(),weekend=weekday===0||weekday===6;
+  if(p.hour>=9&&p.hour<18)return {weekend,status:weekend?"daytime":"business",weekday};
+  if(p.hour>=6&&p.hour<9)return {weekend,status:"early",weekday};
+  if(p.hour>=18&&p.hour<22)return {weekend,status:"evening",weekday};
+  return {weekend,status:"night",weekday};
+}

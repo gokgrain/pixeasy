@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { searchCities } from "../lib/world-cities.ts";
-import { dayDifference,offsetMinutes,parseLocal,partsAt,relativeOffset,resolveLocalTime } from "../lib/world-time.ts";
+import { replaceCityId,searchCities } from "../lib/world-cities.ts";
+import { dayDifference,localTimeStatus,offsetMinutes,parseLocal,partsAt,relativeOffset,resolveLocalTime } from "../lib/world-time.ts";
 
 test("city search supports multilingual names, countries, aliases and partial matches",()=>{
   for(const query of ["Seoul","서울","ソウル","Korea","Republic of Korea","South Korea","KR"])assert.equal(searchCities(query)[0].id,"seoul");
@@ -14,3 +14,9 @@ test("DST rules vary by city and date",()=>{assert.equal(offsetMinutes(Date.UTC(
 test("nonexistent and ambiguous DST times are detected",()=>{assert.equal(resolveLocalTime(parseLocal("2026-03-08","02:30"),"America/New_York").length,0);const repeated=resolveLocalTime(parseLocal("2026-11-01","01:30"),"America/New_York");assert.equal(repeated.length,2);assert.deepEqual(repeated.map(x=>offsetMinutes(x,"America/New_York")),[-240,-300]);});
 test("previous day, next day, year boundary and leap day work",()=>{const instant=resolveLocalTime(parseLocal("2026-12-31","23:30"),"America/New_York")[0];assert.equal(partsAt(instant,"Asia/Seoul").year,2027);assert.equal(dayDifference(instant,"Asia/Seoul","America/New_York"),1);const west=resolveLocalTime(parseLocal("2026-01-01","01:00"),"Asia/Seoul")[0];assert.equal(dayDifference(west,"America/Los_Angeles","Asia/Seoul"),-1);assert.ok(resolveLocalTime(parseLocal("2028-02-29","12:00"),"Europe/London").length);});
 test("switching base city preserves the same instant",()=>{const instant=resolveLocalTime(parseLocal("2026-05-10","09:15"),"Asia/Seoul")[0],newBase=partsAt(instant,"Europe/London"),roundTrip=resolveLocalTime(newBase,"Europe/London");assert.ok(roundTrip.includes(instant));});
+test("Dallas is searchable in every supported language and has localized region data",()=>{for(const query of ["Dallas","댈러스","ダラス","DFW"])assert.equal(searchCities(query)[0].id,"dallas");const dallas=searchCities("Dallas")[0];assert.deepEqual(dallas.region,{en:"Texas",ko:"텍사스",ja:"テキサス州"});});
+test("replacing a city preserves its card position and prevents duplicates",()=>{const ids=["seoul","new-york","london"];assert.deepEqual(replaceCityId(ids,"new-york","dallas"),["seoul","dallas","london"]);assert.deepEqual(replaceCityId(ids,"new-york","london"),ids);});
+test("editing a comparison city's exact local minute produces one synchronized instant",()=>{const instant=resolveLocalTime(parseLocal("2026-11-14","20:37"),"America/New_York")[0];assert.deepEqual(partsAt(instant,"America/New_York"),{year:2026,month:11,day:14,hour:20,minute:37});assert.deepEqual(partsAt(instant,"Asia/Seoul"),{year:2026,month:11,day:15,hour:10,minute:37});});
+test("editing a local date preserves clock time and handles year boundaries",()=>{const instant=resolveLocalTime(parseLocal("2026-12-31","23:59"),"America/New_York")[0];assert.deepEqual(partsAt(instant,"Asia/Seoul"),{year:2027,month:1,day:1,hour:13,minute:59});});
+test("local status distinguishes weekday business hours from weekend daytime",()=>{const weekday=resolveLocalTime(parseLocal("2026-11-13","10:00"),"America/New_York")[0],weekend=resolveLocalTime(parseLocal("2026-11-14","10:00"),"America/New_York")[0];assert.deepEqual(localTimeStatus(weekday,"America/New_York"),{weekend:false,status:"business",weekday:5});assert.deepEqual(localTimeStatus(weekend,"America/New_York"),{weekend:true,status:"daytime",weekday:6});});
+test("local status covers early morning, evening and night",()=>{const status=(time)=>localTimeStatus(resolveLocalTime(parseLocal("2026-11-13",time),"Asia/Kathmandu")[0],"Asia/Kathmandu").status;assert.equal(status("06:00"),"early");assert.equal(status("18:00"),"evening");assert.equal(status("23:59"),"night");});

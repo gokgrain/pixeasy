@@ -549,15 +549,46 @@ h1,h2,h3,p { margin-top:0; }
 .world-time-cards { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; margin-top:18px; }
 .world-time-cards article { min-width:0; padding:18px; border:1px solid var(--line); border-radius:15px; background:#fffdfb; }
 .world-time-cards article.base-card { border-color:#ffc79f; background:#fff8f2; }
-.city-card-heading { display:grid; grid-template-columns:28px 1fr auto; align-items:center; gap:8px; }
+.city-card-heading { position:relative; display:grid; grid-template-columns:minmax(0,1fr) auto; align-items:start; gap:8px; }
 .city-card-heading>span:last-child { padding:5px 8px; border-radius:999px; background:#f0efed; color:#66686d; font-size:.65rem; }
+.card-city-combobox { position:relative; display:block; }
+.card-city-trigger { width:100%; display:grid; grid-template-columns:28px minmax(0,1fr) 20px; align-items:center; gap:8px; border:0; border-radius:9px; padding:3px; background:transparent; color:var(--ink); text-align:left; }
+.card-city-trigger:hover,.card-city-trigger:focus-visible { background:#fff1e7; outline:2px solid transparent; }
+.card-city-trigger strong,.card-city-trigger small { display:block; }
+.city-change-icon { color:var(--orange-dark); font-size:1rem; text-align:center; }
+.card-city-picker { position:absolute; z-index:20; top:calc(100% + 7px); left:0; width:min(360px,calc(100vw - 54px)); padding:10px; border:1px solid var(--line); border-radius:12px; background:#fff; box-shadow:0 16px 42px rgba(20,20,20,.16); }
+.card-city-picker>label { display:block; margin-bottom:6px; color:#4f5156; font-size:.7rem; font-weight:750; }
+.card-city-picker .city-search-wrap ul { left:-10px; right:-10px; }
 .city-card-datetime { display:flex; align-items:center; justify-content:space-between; gap:14px; margin:18px 0 16px; }
+.city-card-datetime button { display:flex; align-items:center; gap:7px; border:1px solid transparent; border-radius:10px; background:transparent; color:inherit; }
+.city-card-datetime button:hover,.city-card-datetime button:focus-visible { border-color:#ffc79f; background:#fff5ed; }
+.card-time-button { min-width:0; padding:7px 8px; }
 .world-time-cards .city-card-datetime time { display:block; margin:0; font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace; font-size:clamp(2rem,4vw,3rem); font-weight:800; font-variant-numeric:tabular-nums; letter-spacing:-.07em; line-height:1; white-space:nowrap; }
-.city-card-datetime>span { max-width:150px; padding:8px 10px; border:1px solid #e9e4df; border-radius:9px; background:#fff; color:#65676c; font-size:.7rem; font-weight:700; line-height:1.35; text-align:center; }
+.card-time-button>span,.card-date-button>span:last-child { color:var(--orange-dark); font-size:.8rem; }
+.card-date-button { max-width:170px; padding:8px 10px; border-color:#e9e4df!important; background:#fff!important; color:#65676c!important; font-size:.7rem; font-weight:700; line-height:1.35; text-align:center; }
+.card-datetime-editor { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:16px 0; padding:12px; border:1px solid #ffc79f; border-radius:12px; background:#fff9f4; }
+.card-datetime-editor>label { display:grid; gap:5px; color:#55575c; font-size:.68rem; font-weight:750; }
+.card-datetime-editor input[type="date"],.card-datetime-editor input[type="text"] { width:100%; min-width:0; min-height:42px; border:1px solid #d8d5d1; border-radius:9px; padding:0 10px; background:#fff; font-size:.85rem; }
+.card-datetime-editor>fieldset,.card-datetime-editor>p,.card-datetime-editor>div { grid-column:1 / -1; }
+.card-datetime-editor>fieldset { display:flex; flex-wrap:wrap; gap:8px 14px; margin:0; padding:9px; border:1px solid #ead8ca; border-radius:9px; font-size:.7rem; }
+.card-datetime-editor>fieldset legend { padding:0 4px; font-weight:700; }
+.card-datetime-editor>fieldset label { display:flex; align-items:center; gap:5px; }
+.card-datetime-editor>p { margin:0; color:#9b3f0c; font-size:.72rem; font-weight:650; }
+.card-datetime-editor>div { display:flex; gap:7px; }
+.card-datetime-editor>div button { min-height:35px; border:1px solid var(--line); border-radius:8px; padding:5px 12px; background:#fff; color:#55575c; font-size:.7rem; font-weight:750; }
+.card-datetime-editor>div .apply-card-edit { border-color:var(--orange); background:var(--orange); color:#fff; }
+.city-status-row { display:flex; flex-wrap:wrap; gap:7px; margin:0 0 14px; }
+.time-status,.day-status { display:inline-flex; align-items:center; gap:5px; min-height:27px; padding:4px 8px; border-radius:999px; font-size:.66rem; font-weight:750; }
+.time-status.business { background:#e8f6ee; color:#17623d; }
+.time-status.daytime { background:#fff4cf; color:#745b00; }
+.time-status.early { background:#edf2ff; color:#425b8f; }
+.time-status.evening { background:#f5edff; color:#654787; }
+.time-status.night { background:#edf0f5; color:#465164; }
+.day-status { background:#f2f1ef; color:#55575c; }
+.day-status.weekend { background:#fff0e6; color:#9b4b17; }
 .world-time-cards dl { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:0; }
 .world-time-cards dt { color:var(--muted); font-size:.67rem; }
-.world-time-cards dd { margin:4px 0 0; font-size:.78rem; font-weight:700; }
-.business-indicator { margin:12px 0 0; color:#6c6e73; font-size:.68rem; }
+.world-time-cards dd { margin:4px 0 0; font-size:.78rem; font-weight:700; line-height:1.45; }
 .city-card-actions { display:flex; gap:8px; margin-top:12px; }
 .city-card-actions button,.world-time-actions>button:not(.primary-btn) { min-height:34px; border:1px solid var(--line); border-radius:8px; padding:5px 9px; background:#fff; color:#55575c; font-size:.7rem; font-weight:700; }
 .world-time-actions { display:flex; flex-wrap:wrap; align-items:center; gap:10px; margin-top:18px; }
@@ -594,5 +625,8 @@ h1,h2,h3,p { margin-top:0; }
   .world-time-cards { grid-template-columns:1fr; }
   .city-card-datetime { align-items:flex-end; }
   .world-time-cards .city-card-datetime time { font-size:clamp(2rem,12vw,2.8rem); }
+  .card-date-button { max-width:138px; }
+  .card-datetime-editor { grid-template-columns:1fr; }
+  .card-datetime-editor>fieldset,.card-datetime-editor>p,.card-datetime-editor>div { grid-column:1; }
   .world-time-actions .primary-btn,.world-time-actions>button:not(.primary-btn) { flex:1 1 140px; min-height:44px; }
 }
